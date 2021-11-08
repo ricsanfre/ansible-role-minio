@@ -1,0 +1,34 @@
+[Unit]
+Description=MinIO
+Documentation=https://docs.min.io
+Wants=network-online.target
+After=network-online.target
+AssertFileIsExecutable={{ minio_server_bin }}
+
+[Service]
+WorkingDirectory=/usr/local/
+
+User={{ minio_user }}
+Group={{ minio_group }}
+ProtectProc=invisible
+
+EnvironmentFile={{ minio_server_envfile }}
+ExecStartPre=/bin/bash -c "if [ -z \"${MINIO_VOLUMES}\" ]; then echo \"Variable MINIO_VOLUMES not set in {{ minio_server_envfile }}\"; exit 1; fi"
+
+ExecStart={{ minio_server_bin }} server $MINIO_OPTS $MINIO_VOLUMES
+
+# Let systemd restart this service always
+Restart=always
+
+# Specifies the maximum file descriptor number that can be opened by this process
+LimitNOFILE=65536
+
+# Specifies the maximum number of threads this process can create
+TasksMax=infinity
+
+# Disable timeout logic and wait until process is stopped
+TimeoutStopSec=infinity
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

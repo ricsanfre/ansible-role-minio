@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  role_name: minio
+  author: ricsanfre
+  description: minio installation and configuration role
+
+  license: license (MIT)
+
+  min_ansible_version: 2.11
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+
+  galaxy_tags:
+    - system
+    - s3
+    - minio
+
+dependencies: []

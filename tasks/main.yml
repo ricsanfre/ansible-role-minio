@@ -1,0 +1,6 @@
+---
+- include_tasks: install_server.yml
+  when: minio_install_server
+
+- include_tasks: install_client.yml
+  when: minio_install_client

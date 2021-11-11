@@ -2,5 +2,8 @@
 - include_tasks: install_server.yml
   when: minio_install_server
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - include_tasks: install_client.yml
   when: minio_install_client

@@ -20,7 +20,9 @@ minio_client_bin: /usr/local/bin/mc
 minio_server_envfile: /etc/default/minio
 
 # Minio server listen address
-minio_server_addr: ":9091"
+minio_server_port: "9091"
+minio_server_addr: ""
+minio_console_port: "9092"
 
 # Additional environment variables to be set in minio server environment
 minio_server_env_extra: ""

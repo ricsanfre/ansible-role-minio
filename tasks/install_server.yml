@@ -20,6 +20,17 @@
     system: "yes"
     shell: "/usr/sbin/nologin"
 
+- name: Create the Minio config directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "root"
+    group: "{{ minio_group }}"
+    mode: 0640
+  with_items:
+    - "{{ minio_etc_dir }}"
+    - "{{ minio_cert_dir }}"
+
 - name: Create the Minio data storage directories
   file:
     path: "{{ item }}"
@@ -63,3 +74,26 @@
   notify:
     - reload minio systemd
     - restart minio
+
+- name: Copy SSL private key file
+  copy:
+    dest: "{{ minio_cert_dir }}/private.key"
+    content: "{{ minio_key }}"
+    owner: "{{ minio_user }}"
+    group: "{{ minio_user }}"
+    mode: 0644
+  become: true
+  when: minio_enable_tls
+  notify: restart minio
+
+- name: Copy cert file
+  copy:
+    dest: "{{ minio_cert_dir }}/public.crt"
+    content: "{{ minio_cert }}"
+    owner: "{{ minio_user }}"
+    group: "{{ minio_user }}"
+    mode: 0644
+  become: true
+  when: minio_enable_tls
+  notify: restart minio
+

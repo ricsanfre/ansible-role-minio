@@ -17,7 +17,9 @@ minio_server_bin: /usr/local/bin/minio
 minio_client_bin: /usr/local/bin/mc
 
 # mino server env file
-minio_server_envfile: /etc/default/minio
+minio_etc_dir: /etc/minio
+minio_cert_dir: "{{ minio_etc_dir }}/ssl"
+minio_server_envfile: "{{ minio_etc_dir }}/minio.conf"
 
 # Minio server listen address
 minio_server_port: "9091"
@@ -33,3 +35,8 @@ minio_server_opts: ""
 # Minio root user and password
 minio_root_user: ""
 minio_root_password: ""
+
+# TLS
+minio_enable_tls: false
+minio_key: ""
+minio_cert: ""

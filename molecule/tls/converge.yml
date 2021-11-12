@@ -1,0 +1,32 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    server_hostname: minio
+    ssl_key_size: 4096
+    ssl_certificate_provider: selfsigned
+    minio_key: 
+
+  pre_tasks:
+    - name: Including tasks to perform if we are on the slave node
+      include_tasks: generate_selfsigned_cert.yml
+      args:
+        apply:
+          delegate_to: localhost
+    
+    - name: Load tls key and cert
+      set_fact:
+        minio_key: "{{ lookup('file','/tmp/{{ inventory_hostname }}_private.key') }}"
+        minio_cert: "{{ lookup('file','/tmp/{{ inventory_hostname }}_public.crt') }}"
+      delegate_to: localhost
+
+  roles:
+    - role: ricsanfre.minio
+      minio_root_user: "miniadmin"
+      minio_root_password: "supers1cret0"
+      minio_enable_tls: true
+  
+      
+

@@ -24,9 +24,9 @@
   file:
     path: "{{ item }}"
     state: directory
-    owner: "root"
+    owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
-    mode: 0640
+    mode: 0750
   with_items:
     - "{{ minio_etc_dir }}"
     - "{{ minio_cert_dir }}"
@@ -59,7 +59,7 @@
   template:
     src: minio.env.j2
     dest: "{{ minio_server_envfile }}"
-    owner: "root"
+    owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
     mode: 0640
   notify: restart minio

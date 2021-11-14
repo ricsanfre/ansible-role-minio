@@ -97,3 +97,5 @@
   when: minio_enable_tls
   notify: restart minio
 
+- name: Flush handlers
+  meta: flush_handlers

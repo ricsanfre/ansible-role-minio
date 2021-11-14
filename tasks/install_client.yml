@@ -20,7 +20,3 @@
   until: _download_client is succeeded
   retries: 5
   delay: 2
-
-- name: Configure minio server
-  command: "mc alias set localminio http://127.0.0.1:{{ minio_server_port }} {{ minio_root_user }} {{ minio_root_password }}"
-

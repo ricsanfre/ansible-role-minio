@@ -30,5 +30,9 @@ TasksMax=infinity
 TimeoutStopSec=infinity
 SendSIGKILL=no
 
+{% if (minio_server_port | int) < 1024 %}
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+{% endif %}
+
 [Install]
 WantedBy=multi-user.target

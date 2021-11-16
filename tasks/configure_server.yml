@@ -1,0 +1,16 @@
+---
+
+- name: Install pip packages
+  pip:
+    name:
+      - minio
+    state: present
+    extra_args: --upgrade
+  register: package_install
+  until: package_install is succeeded
+
+- include_tasks: create_minio_bucket.yml
+  with_items:
+    - "{{ minio_buckets }}"
+  loop_control:
+    loop_var: "bucket"

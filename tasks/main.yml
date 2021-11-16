@@ -1,9 +1,19 @@
 ---
+# Install Minio Server
 - include_tasks: install_server.yml
   when: minio_install_server
 
+# Install Minio Client
 - include_tasks: install_client.yml
   when: minio_install_client
 
+# Add local minio server to Minio client
 - include_tasks: configure_client.yml
-  when: minio_install_server and minio_install_client
+  when: minio_url|length > 0 and minio_install_client
+
+# Configure Minio Server
+- include_tasks: configure_server.yml
+  args:
+    apply:
+      delegate_to: localhost
+      become: false

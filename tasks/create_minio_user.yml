@@ -1,0 +1,4 @@
+---
+
+- name: Create users
+  command: "mc --insecure admin user add local {{ user.name }} {{ user.password }}"

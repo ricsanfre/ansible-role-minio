@@ -1,14 +1,17 @@
 ---
 
-- name: set secure minio url
-  set_fact:
-    minio_url: "https://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
-  when: minio_enable_tls
-
-- name: set unsecure minio_url
-  set_fact:
-    minio_url: "http://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
-  when: not minio_enable_tls
-
-- name: Configure minio server
+- name: Configure minio connection alias
   command: "mc --insecure alias set local {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
+
+# - name: Create buckets
+#   command: "mc --insecure mb local/{{ bucket }}"
+#   with_items:
+#     - "{{ minio_buckets }}"
+#   loop_control:
+#     loop_var: "bucket"
+
+- include_tasks: create_minio_users.yml
+  with_items:
+    - "{{ minio_users }}"
+  loop_control:
+    loop_var: "user"

@@ -29,5 +29,10 @@ provisioner:
   name: ansible
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  inventory:
+    host_vars:
+      localhost:
+        ansible_user: ${USER}
+
 verifier:
   name: ansible

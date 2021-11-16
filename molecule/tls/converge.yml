@@ -14,9 +14,16 @@
       args:
         apply:
           delegate_to: localhost
-    
+          become: false
+
   roles:
     - role: ricsanfre.minio
       minio_root_user: "miniadmin"
       minio_root_password: "supers1cret0"
       minio_enable_tls: true
+      minio_buckets:
+        - name: bucket1
+          policy: read-write
+      minio_users:
+        - name: user1
+          password: supers1cret0

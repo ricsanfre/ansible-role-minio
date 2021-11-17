@@ -10,9 +10,12 @@
     owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
     mode: 0640
+  register: create_policy
 
 - name: Add user policy
   command: "mc --insecure admin policy add local {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
+  when: create_policy.changed
 
 - name: Apply user policy
   command: "mc --insecure admin policy set local {{ user.name }} user={{ user.name }}"
+  when: create_policy.changed

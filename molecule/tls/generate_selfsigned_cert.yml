@@ -23,4 +23,3 @@
   set_fact:
     minio_key: "{{ lookup('file','certificates/{{ inventory_hostname }}_private.key') }}"
     minio_cert: "{{ lookup('file','certificates/{{ inventory_hostname }}_public.crt') }}"
-  delegate_to: localhost

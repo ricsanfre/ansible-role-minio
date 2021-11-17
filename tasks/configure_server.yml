@@ -1,16 +1,16 @@
 ---
 
-- name: Install pip packages
-  pip:
-    name:
-      - minio
-    state: present
-    extra_args: --upgrade
-  register: package_install
-  until: package_install is succeeded
+- name: Configure minio connection alias
+  command: "mc --insecure alias set local {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
 
-- include_tasks: create_minio_bucket.yml
+- include_tasks: create_minio_user.yml
   with_items:
-    - "{{ minio_buckets }}"
+    - "{{ minio_users }}"
   loop_control:
-    loop_var: "bucket"
+    loop_var: "user"
+
+- include_tasks: create_minio_buckets.yml
+  args:
+    apply:
+      delegate_to: localhost
+      become: false

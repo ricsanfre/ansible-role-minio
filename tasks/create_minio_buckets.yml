@@ -1,0 +1,24 @@
+---
+
+- name: Install pip packages
+  pip:
+    name:
+      - minio
+    state: present
+    extra_args: --upgrade
+  register: package_install
+  until: package_install is succeeded
+
+- name: "Create Buckets"
+  minio_bucket:
+    s3_url: "{{ minio_url }}"
+    name: "{{ bucket.name }}"
+    access_key: "{{ minio_root_user }}"
+    secret_key: "{{ minio_root_password }}"
+    state: present
+    policy: "{{ bucket.policy }}"
+    validate_certs: false
+  with_items:
+    - "{{ minio_buckets }}"
+  loop_control:
+    loop_var: "bucket"

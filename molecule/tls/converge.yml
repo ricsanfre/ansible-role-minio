@@ -24,6 +24,13 @@
       minio_buckets:
         - name: bucket1
           policy: read-write
+        - name: bucket2
+          policy: read-write
       minio_users:
         - name: user1
           password: supers1cret0
+          buckets_acl:
+            - name: bucket1
+              policy: read-write
+            - name: bucket2
+              policy: read-only

@@ -16,9 +16,11 @@ minio_server_datadirs:
 minio_server_bin: /usr/local/bin/minio
 minio_client_bin: /usr/local/bin/mc
 
-# mino server env file
+# mino server config dirs
 minio_etc_dir: /etc/minio
 minio_cert_dir: "{{ minio_etc_dir }}/ssl"
+minio_policy_dir: "{{ minio_etc_dir }}/policy"
+# mino server env file
 minio_server_envfile: "{{ minio_etc_dir }}/minio.conf"
 
 # Minio server listen address

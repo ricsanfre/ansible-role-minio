@@ -30,6 +30,7 @@
   with_items:
     - "{{ minio_etc_dir }}"
     - "{{ minio_cert_dir }}"
+    - "{{ minio_policy_dir }}"
 
 - name: Create the Minio data storage directories
   file:

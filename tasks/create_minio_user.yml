@@ -2,3 +2,17 @@
 
 - name: Create users
   command: "mc --insecure admin user add local {{ user.name }} {{ user.password }}"
+
+- name: Create users policy file
+  template:
+    src: minio_policy.json.j2
+    dest: "{{ minio_policy_dir }}/{{ user.name }}.json"
+    owner: "{{ minio_user }}"
+    group: "{{ minio_group }}"
+    mode: 0640
+
+- name: Add user policy
+  command: "mc --insecure admin policy add local {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
+
+- name: Apply user policy
+  command: "mc --insecure admin policy set local {{ user.name }} user={{ user.name }}"

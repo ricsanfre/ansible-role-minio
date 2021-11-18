@@ -54,3 +54,6 @@ minio_users: []
 # minio_users:
 #  - name: user1
 #    password: supers1cret0
+
+# Minio client
+minio_validate_certificate: true

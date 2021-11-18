@@ -10,17 +10,22 @@
 
   pre_tasks:
     - name: Generate self-signed SSL certificates for minio
-      include_tasks: generate_selfsigned_cert.yml
+      include_tasks: tasks/generate_selfsigned_cert.yml
       args:
         apply:
           delegate_to: localhost
           become: false
+    - name: Load tls key and cert
+      set_fact:
+        minio_key: "{{ lookup('file','certificates/' + inventory_hostname + '_private.key') }}"
+        minio_cert: "{{ lookup('file','certificates/' + inventory_hostname + '_public.crt') }}"
 
   roles:
     - role: ricsanfre.minio
       minio_root_user: "miniadmin"
       minio_root_password: "supers1cret0"
       minio_enable_tls: true
+      minio_validate_certificate: false
       minio_buckets:
         - name: bucket1
           policy: read-write

@@ -13,9 +13,9 @@
   register: create_policy
 
 - name: Add user policy
-  command: "mc --insecure admin policy add local {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
+  command: "{{ mc_command }} admin policy add local {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
   when: create_policy.changed
 
 - name: Apply user policy
-  command: "mc --insecure admin policy set local {{ user.name }} user={{ user.name }}"
+  command: "{{ mc_command }} admin policy set local {{ user.name }} user={{ user.name }}"
   when: create_policy.changed

@@ -1,7 +1,16 @@
 ---
+- name: Set insecure mc command
+  set_fact:
+    mc_command: "mc --insecure"
+  when: not minio_validate_certificate
+
+- name: Set secure mc command
+  set_fact:
+    mc_command: "mc"
+  when: minio_validate_certificate
 
 - name: Configure minio connection alias
-  command: "mc --insecure alias set local {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
+  command: "{{ mc_command }} alias set local {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
 
 - include_tasks: create_minio_user.yml
   with_items:

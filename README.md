@@ -54,6 +54,15 @@ minio_install_client: true
     - /var/lib/minio
   ```
 
+- Minio client configuration
+  
+  Connection alias name `minio_alias` and whether validate or not SSL certificates (`minio_validate_certificates`)
+  
+  ```yml
+  minio_validate_certificate: true
+  minio_alias: "myminio"
+  ```
+
 - Configuration of TLS
 
   To enable configuration of TLS set `minio_enable_tls` to true and provide the private key and public certificate as content loaded into `minio_key` and `minio_cert` variables.
@@ -126,6 +135,10 @@ It also create some buckets and users with proper ACLs
         apply:
           delegate_to: localhost
           become: false
+    - name: Load tls key and cert
+      set_fact:
+        minio_key: "{{ lookup('file','certificates/' + inventory_hostname + '_private.key') }}"
+        minio_cert: "{{ lookup('file','certificates/' + inventory_hostname + '_public.crt') }}"
 
   roles:
     - role: ricsanfre.minio
@@ -148,7 +161,9 @@ It also create some buckets and users with proper ACLs
 
 ```
 
-Where `generate_selfsigned_cert.yml` contain the tasks for generating a Private Key and SSL self-signed certificate and load them into `minio_key` and `minio_cert` variables:
+`pre-tasks` section include tasks to generate a private key and a self-signed certificate and load them into `minio_key` and `minio_cert` variables.
+
+Where `generate_selfsigned_cert.yml` contain the tasks for generating a Private Key and SSL self-signed certificate:
 
 ```yml
 ---
@@ -171,11 +186,6 @@ Where `generate_selfsigned_cert.yml` contain the tasks for generating a Private 
     path: "certificates/{{ inventory_hostname }}_public.crt"
     privatekey_path: "certificates/{{ inventory_hostname }}_private.key"
     provider: "{{ ssl_certificate_provider }}"
-
-- name: Load tls key and cert
-  set_fact:
-    minio_key: "{{ lookup('file','certificates/{{ inventory_hostname }}_private.key') }}"
-    minio_cert: "{{ lookup('file','certificates/{{ inventory_hostname }}_public.crt') }}"
 
 ```
 

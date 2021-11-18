@@ -1,7 +1,18 @@
 ---
 
+- name: Check whether user is already configured
+  command: "{{ mc_command }} admin user info {{ minio_alias }} {{ user.name }}"
+  register: get_user
+  changed_when: false
+  ignore_errors: true
+
 - name: Create users
-  command: "mc --insecure admin user add local {{ user.name }} {{ user.password }}"
+  command: "{{ mc_command }} admin user add {{ minio_alias }} {{ user.name }} {{ user.password }}"
+  register: add_user
+  changed_when: '"Added user `" + user.name +"` successfully" in add_user.stdout'
+  when:
+    - get_user.rc==1
+    - '"Unable to get user info" in get_user.stderr'
 
 - name: Create users policy file
   template:
@@ -13,9 +24,13 @@
   register: create_policy
 
 - name: Add user policy
-  command: "{{ mc_command }} admin policy add local {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
+  command: "{{ mc_command }} admin policy add {{ minio_alias }} {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
+  register: add_policy
   when: create_policy.changed
+  changed_when: '"Added policy `"+  user.name +"` successfully" in add_policy.stdout'
 
 - name: Apply user policy
-  command: "{{ mc_command }} admin policy set local {{ user.name }} user={{ user.name }}"
+  command: "{{ mc_command }} admin policy set {{ minio_alias }} {{ user.name }} user={{ user.name }}"
+  register: apply_policy
   when: create_policy.changed
+  changed_when: '"Policy `" + user.name + "` is set on user `" +  user.name + "`" in apply_policy.stdout'

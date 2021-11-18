@@ -57,3 +57,4 @@ minio_users: []
 
 # Minio client
 minio_validate_certificate: true
+minio_alias: "myminio"

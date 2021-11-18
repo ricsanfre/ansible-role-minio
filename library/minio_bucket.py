@@ -237,18 +237,18 @@ def main():
 
             if not client.bucket_exists(bucket_name):
                 client.make_bucket(bucket_name)
-
-            if policy:
-                client.set_bucket_policy(bucket_name, json.dumps({
-                    "Version": "2012-10-17",
-                    "Statement": get_ro_statements(bucket_name) \
-                        if policy == "read-only" else \
-                        get_wo_statements(bucket_name) \
-                        if policy == "write-only" else \
-                        get_rw_statements(bucket_name)
-                }))
-
-            exit_message = dict(failed=False, changed=True)
+                if policy:
+                    client.set_bucket_policy(bucket_name, json.dumps({
+                        "Version": "2012-10-17",
+                        "Statement": get_ro_statements(bucket_name) \
+                            if policy == "read-only" else \
+                            get_wo_statements(bucket_name) \
+                            if policy == "write-only" else \
+                            get_rw_statements(bucket_name)
+                    }))
+                exit_message = dict(failed=False, changed=True)
+            else:
+                exit_message = dict(failed=False, changed=False)
 
     except urllib3.exceptions.MaxRetryError:
         exit_message = dict(

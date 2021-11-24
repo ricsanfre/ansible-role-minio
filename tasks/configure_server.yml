@@ -30,7 +30,3 @@
     loop_var: "user"
 
 - include_tasks: create_minio_buckets.yml
-  args:
-    apply:
-      delegate_to: localhost
-      become: false

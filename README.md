@@ -87,7 +87,7 @@ minio_install_client: true
     - name: bucket2
       policy: read-write
   ```
-  > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Current implementation delegates bucket creation tasks to localhost (ansible control node), avoiding the installation of python modules on Minio server. As a caveat connection between ansible control node and Minio Server need to be enabled.
+  > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Role ensure that PIP is installed and install `minio` package.
 
 - Users to be created and buckets ACLs
 

@@ -1,5 +1,12 @@
 ---
 
+- name: Ensure PIP is installed.
+  package:
+    name:
+      - python3-pip
+      - python3-setuptools
+    state: present
+
 - name: Install pip packages
   pip:
     name:

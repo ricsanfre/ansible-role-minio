@@ -19,6 +19,7 @@
 - name: "Create Buckets"
   minio_bucket:
     s3_url: "{{ minio_url }}"
+    region: "{{ minio_site_region }}"
     name: "{{ bucket.name }}"
     access_key: "{{ minio_root_user }}"
     secret_key: "{{ minio_root_password }}"

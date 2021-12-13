@@ -46,6 +46,11 @@ minio_install_client: true
   minio_root_password: ""
   ```
 
+  Minio site region
+  ```yml
+  minio_site_region: "eu-west-1"
+  ```
+  
   Minio data directories (`minio_server_datadirs`) and whether force the creation in case they do not exist (`minio_server_make_datadirs`)
   
   ```yml

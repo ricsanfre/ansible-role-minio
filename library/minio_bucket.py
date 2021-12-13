@@ -15,6 +15,10 @@ options:
         description:
             - The name or IP address of the name server to query.
         required: true
+    region:
+        description:
+            - Region name of buckets in S3 service
+        required: false
     name:
         description:
             - The name of the S3 bucket.
@@ -172,6 +176,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             s3_url=dict(required=True, type="str"),
+            region=dict(required=False, type="str", default="us-west-1"),
             name=dict(required=True, type="str"),
             access_key=dict(required=True, type="str"),
             secret_key=dict(required=True, type="str"),
@@ -214,6 +219,7 @@ def main():
             access_key=module.params["access_key"],
             secret_key=module.params["secret_key"],
             secure=is_https,
+            region=module.params["region"],
             http_client=http_client
         )
 

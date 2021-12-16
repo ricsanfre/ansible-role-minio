@@ -31,6 +31,8 @@
           policy: read-write
         - name: bucket2
           policy: read-write
+        - name: bucket3
+          policy: read-write
       minio_users:
         - name: user1
           password: supers1cret0
@@ -39,3 +41,26 @@
               policy: read-write
             - name: bucket2
               policy: read-only
+            - name: bucket3
+              policy: custom
+              custom:
+                - rule: |
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:GetObject",
+                        "s3:DeleteObject",
+                        "s3:PutObject",
+                        "s3:AbortMultipartUpload",
+                        "s3:ListMultipartUploadParts"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::bucket3/*"
+                    ]
+                - rule: |
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:ListBucket"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::bucket3"
+                    ]

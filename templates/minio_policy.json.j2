@@ -31,6 +31,13 @@
         ]
     {{ "}," if not loop.last else "}" }}
 {% endif %}
+{% if acl['policy'] == 'custom' and acl['custom'] %}
+{% for custom in acl.custom %}
+    {
+        {{ custom['rule'] }}
+    {{ "}," if not loop.last else "}" }}    
+{% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
   ]

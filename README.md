@@ -94,22 +94,104 @@ minio_install_client: true
   ```
   > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Role ensure that PIP is installed and install `minio` package.
 
+  During bucket creation two type of policies can be specified: `read-only` or `read-write` buckets.
+
 - Users to be created and buckets ACLs
 
   Users can be automatically created using  `minio_users` variable: a list of users can be provided, each user with three variables `name` (user name), `password` (user password) and `buckets_acl` list of buckets and type of access granted to each bucket (read-only or read-write).
-  The role automatically create policy json files containing the user policy statements and load them into the server 
+  The role automatically create policy json files containing the user policy statements and load them into the server.
+
+  Predefined `read-only` and `read-write` policies, containing pre-defined access statements, can be used. Custom policies can be also defined using  `custom` policy. In this case list of access statements need to be provided.
+
 
   ```yml
   minio_users:
-    - name: user1
-      password: supers1cret0
-      buckets_acl:
-        - name: bucket1
-          policy: read-write
-        - name: bucket2
-          policy: read-only
+  - name: user1
+    password: supers1cret0
+    buckets_acl:
+      - name: bucket1
+        policy: read-write
+      - name: bucket2
+        policy: read-only
+      - name: bucket3
+        policy: custom
+        custom:
+          - rule: |
+              "Effect": "Allow",
+              "Action": [
+                  "s3:GetObject",
+                  "s3:DeleteObject",
+                  "s3:PutObject",
+                  "s3:AbortMultipartUpload",
+                  "s3:ListMultipartUploadParts"
+              ],
+              "Resource": [
+                  "arn:aws:s3:::bucket3/*"
+              ]
+          - rule: |
+              "Effect": "Allow",
+              "Action": [
+                  "s3:ListBucket"
+              ],
+              "Resource": [
+                  "arn:aws:s3:::bucket3"
+              ]
   ```
+ The previous configuration will create the following policy.json file for the user
 
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:DeleteObject",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bucket1",
+                "arn:aws:s3:::bucket1/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bucket2",
+                "arn:aws:s3:::bucket2/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:AbortMultipartUpload",
+                "s3:DeleteObject",
+                "s3:GetObject",
+                "s3:ListMultipartUploadParts",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bucket3/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bucket3"
+            ]
+        }
+    ]
+}
+```
 
 Dependencies
 ------------

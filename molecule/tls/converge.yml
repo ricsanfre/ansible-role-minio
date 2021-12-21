@@ -1,6 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  become: true
   gather_facts: true
   vars:
     server_hostname: minio.picluster.ricsanfre.com
@@ -13,7 +14,7 @@
       args:
         apply:
           delegate_to: localhost
-
+          become: false
     - name: Load tls key and cert
       set_fact:
         minio_key: "{{ lookup('file','certificates/' + inventory_hostname + '_private.key') }}"

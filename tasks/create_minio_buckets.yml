@@ -6,7 +6,6 @@
       - python3-pip
       - python3-setuptools
     state: present
-  become: true
 
 - name: Install pip packages
   pip:
@@ -14,7 +13,6 @@
       - minio
     state: present
     extra_args: --upgrade
-  become: true
   register: package_install
   until: package_install is succeeded
 

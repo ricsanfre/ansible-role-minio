@@ -2,10 +2,16 @@
 # Install Minio Server
 - include_tasks: install_server.yml
   when: minio_install_server
+  args:
+    apply:
+      become: true
 
 # Install Minio Client
 - include_tasks: install_client.yml
   when: minio_install_client
+  args:
+    apply:
+      become: true
 
 # Add local minio server to Minio client
 - include_tasks: configure_server.yml

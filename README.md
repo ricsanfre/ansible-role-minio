@@ -16,10 +16,10 @@ Available variables are listed below along with default values (see `defaults\ma
 
 - Wheter to install or not minio server and minio client
 
-```yml
-minio_install_server: true
-minio_install_client: true
-```
+  ```yml
+  minio_install_server: true
+  minio_install_client: true
+  ```
 - Minio server installation details
 
   Minio UNIX user/group
@@ -286,3 +286,4 @@ Author Information
 ------------------
 
 Created by Ricardo Sanchez (ricsanfre)
+Bucket creation ansible module based on module from Alexix Facques (https://github.com/alexisfacques/ansible-module-s3-minio-bucket)

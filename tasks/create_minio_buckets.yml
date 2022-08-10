@@ -5,6 +5,7 @@
     name:
       - python3-pip
       - python3-setuptools
+      - python-is-python3
     state: present
 
 - name: Install pip packages

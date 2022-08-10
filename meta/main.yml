@@ -6,7 +6,7 @@ galaxy_info:
 
   license: license (MIT)
 
-  min_ansible_version: 2.11
+  min_ansible_version: "2.11"
 
   platforms:
     - name: Ubuntu

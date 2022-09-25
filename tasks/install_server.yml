@@ -4,7 +4,7 @@
   set_fact:
     _minio_server_download_url: "https://dl.minio.io/server/minio/release/linux-{{ go_arch }}/minio"
 
-- name: "Get the Minio server checksum for {{ go_arch }} architecture"
+- name: Get the Minio server checksum for architecture {{ go_arch }}
   set_fact:
     _minio_server_checksum: "{{ lookup('url', _minio_server_download_url + '.sha256sum').split(' ')[0] }}"
 
@@ -54,7 +54,7 @@
   until: _download_server is succeeded
   retries: 5
   delay: 2
-  notify: restart minio
+  notify: Restart minio
 
 - name: Generate the Minio server envfile
   template:
@@ -63,7 +63,7 @@
     owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
     mode: 0640
-  notify: restart minio
+  notify: Restart minio
 
 - name: Create the Minio server systemd config
   template:
@@ -73,8 +73,8 @@
     group: "root"
     mode: 0644
   notify:
-    - reload minio systemd
-    - restart minio
+    - Reload minio systemd
+    - Restart minio
 
 - name: Copy SSL private key file
   copy:
@@ -85,7 +85,7 @@
     mode: 0644
   become: true
   when: minio_enable_tls
-  notify: restart minio
+  notify: Restart minio
 
 - name: Copy cert file
   copy:
@@ -96,7 +96,7 @@
     mode: 0644
   become: true
   when: minio_enable_tls
-  notify: restart minio
+  notify: Restart minio
 
 - name: Flush handlers
   meta: flush_handlers
@@ -106,12 +106,12 @@
     name: minio
     enabled: true
 
-- name: set secure minio url if not defined
+- name: Set secure minio url if not defined
   set_fact:
     minio_url: "https://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
-  when: minio_enable_tls and minio_url|length == 0
+  when: minio_enable_tls and minio_url | length == 0
 
-- name: set unsecure minio_url if not defined
+- name: Set unsecure minio_url if not defined
   set_fact:
     minio_url: "http://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
-  when: not minio_enable_tls and minio_url|length == 0
+  when: not minio_enable_tls and minio_url | length == 0

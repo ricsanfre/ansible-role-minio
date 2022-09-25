@@ -4,7 +4,7 @@
   set_fact:
     _minio_client_download_url: "https://dl.minio.io/client/mc/release/linux-{{ go_arch }}/mc"
 
-- name: "Get the Minio client checksum for {{ go_arch }} architecture"
+- name: Get the Minio client checksum for architecture {{ go_arch }}
   set_fact:
     _minio_client_checksum: "{{ lookup('url', _minio_client_download_url + '.sha256sum').split(' ')[0] }}"
 

@@ -4,7 +4,7 @@
   become: true
   gather_facts: true
   vars:
-    server_hostname: minio.picluster.ricsanfre.com
+    server_hostname: minio.ricsanfre.com
     ssl_key_size: 4096
     ssl_certificate_provider: selfsigned
 
@@ -25,6 +25,7 @@
       minio_root_user: "miniadmin"
       minio_root_password: "supers1cret0"
       minio_enable_tls: true
+      minio_server_url: "https://{{ server_hostname }}:{{ minio_server_port }}"
       minio_validate_certificate: false
       minio_buckets:
         - name: bucket1

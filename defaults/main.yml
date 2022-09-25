@@ -46,6 +46,7 @@ minio_root_password: ""
 minio_enable_tls: false
 minio_key: ""
 minio_cert: ""
+minio_server_url: ""
 
 # Buckets
 minio_buckets: []

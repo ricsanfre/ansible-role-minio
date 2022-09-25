@@ -8,7 +8,7 @@ lint: |
 driver:
   name: docker
 platforms:
-  - name: instance
+  - name: minio.ricsanfre.com
     image: "ricsanfre/docker-${MOLECULE_DISTRO:-ubuntu}-ansible:${MOLECULE_RELEASE:-latest}"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:

@@ -34,7 +34,7 @@ jobs:
       - name: Lint code.
         run: |
           yamllint .
-          ansible-lint
+
   molecule:
     name: Molecule
     runs-on: ubuntu-latest

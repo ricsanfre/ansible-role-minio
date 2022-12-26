@@ -23,10 +23,12 @@
     - get_alias.rc==1
     - '"No such alias `" + minio_alias + "` found." in get_alias.stderr'
 
-- include_tasks: create_minio_user.yml
+- name: Create Minio Users
+  include_tasks: create_minio_user.yml
   with_items:
     - "{{ minio_users }}"
   loop_control:
     loop_var: "user"
 
-- include_tasks: create_minio_buckets.yml
+- name: Create Minio Buckets
+  include_tasks: create_minio_buckets.yml

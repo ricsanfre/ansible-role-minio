@@ -10,9 +10,6 @@
   register: prometheus_token
   when: not prometheus_toke_file.stat.exists
 
-- debug:
-    var: prometheus_token
-
 - name: Copy bearer token.
   copy:
     content: "{{ prometheus_token.stdout | from_json }}"

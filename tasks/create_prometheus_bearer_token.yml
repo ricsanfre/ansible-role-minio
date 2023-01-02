@@ -1,0 +1,23 @@
+---
+
+- name: Check if prometheus bearer token exist
+  stat:
+    path: "{{ prometheus_bearer_token_output }}"
+  register: prometheus_toke_file
+
+- name: Create prometheus bearer token
+  command: "{{ mc_command }} admin prometheus generate {{ minio_alias }} -json"
+  register: prometheus_token
+  when: not prometheus_toke_file.stat.exists
+
+- debug:
+    var: prometheus_token
+
+- name: Copy bearer token.
+  copy:
+    content: "{{ prometheus_token.stdout | from_json }}"
+    dest: "{{ prometheus_bearer_token_output }}"
+    owner: "{{ minio_user }}"
+    group: "{{ minio_group }}"
+    mode: "0600"
+  when: not prometheus_toke_file.stat.exists

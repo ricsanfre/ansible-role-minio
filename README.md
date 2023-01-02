@@ -201,6 +201,18 @@ Available variables are listed below along with default values (see `defaults\ma
 }
 ```
 
+- Generate Prometheus bearer token
+
+  ```yml
+  minio_prometheus_bearer_token: false
+  prometheus_bearer_token_output: "{{ minio_etc_dir }}/prometheus_bearer.json"
+  ```
+  
+  Setting `minio_prometheus_bearer_token` to true, generates a file `/etc/minio/prometheus_bearer.json` which contains the result of executing the command:
+
+  `mc admin prometheus generate myminio -json`
+
+
 Dependencies
 ------------
 

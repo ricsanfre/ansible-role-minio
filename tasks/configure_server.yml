@@ -32,3 +32,8 @@
 
 - name: Create Minio Buckets
   include_tasks: create_minio_buckets.yml
+
+# Create Prometheus bearer token
+- name: Create Prometheus bearer token
+  include_tasks: create_prometheus_bearer_token.yml
+  when: minio_prometheus_bearer_token

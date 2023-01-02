@@ -27,6 +27,7 @@
       minio_enable_tls: true
       minio_server_url: "https://{{ server_hostname }}:{{ minio_server_port }}"
       minio_validate_certificate: false
+      minio_prometheus_bearer_token: true
       minio_buckets:
         - name: bucket1
           policy: read-write

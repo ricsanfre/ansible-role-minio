@@ -62,3 +62,7 @@ minio_users: []
 # Minio client
 minio_validate_certificate: true
 minio_alias: "myminio"
+
+# Prometheus bearer token
+minio_prometheus_bearer_token: false
+prometheus_bearer_token_output: "{{ minio_etc_dir }}/prometheus_bearer.json"

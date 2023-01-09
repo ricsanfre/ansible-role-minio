@@ -43,6 +43,8 @@ jobs:
         distro:
           - os: ubuntu
             release: 20.04
+          - os: ubuntu
+            release: 22.04
     steps:
       - name: Check out the codebase.
         uses: actions/checkout@v3

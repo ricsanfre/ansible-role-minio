@@ -1,0 +1,76 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    server_hostname: minio.ricsanfre.com
+    subject_alt_names: "DNS:minio.ricsanfre.com,DNS:minio1.ricsanfre.com,DNS:minio2.ricsanfre.com,DNS:minio3.ricsanfre.com"
+    ssl_key_size: 4096
+    ssl_certificate_provider: selfsigned
+
+  pre_tasks:
+    - name: Generate self-signed SSL certificates for minio
+      include_tasks: tasks/generate_selfsigned_cert.yml
+      args:
+        apply:
+          delegate_to: localhost
+          become: false
+      run_once: true
+
+    - name: Load tls key and cert
+      set_fact:
+        minio_key: "{{ lookup('file', 'certificates/' + server_hostname + '_private.key') }}"
+        minio_cert: "{{ lookup('file', 'certificates/' + server_hostname + '_public.crt') }}"
+      run_once: true
+
+  roles:
+    - role: ricsanfre.minio
+      minio_root_user: "miniadmin"
+      minio_root_password: "supers1cret0"
+      minio_enable_tls: true
+      minio_server_url: "https://{{ server_hostname }}:{{ minio_server_port }}"
+      minio_validate_certificate: false
+      minio_prometheus_bearer_token: true
+      minio_server_datadirs:
+        - '/mnt/disk/minio'
+      minio_server_cluster_nodes:
+        - 'https://minio{1...3}.ricsanfre.com:9091/mnt/disk/minio'
+      minio_buckets:
+        - name: bucket1
+          policy: read-write
+        - name: bucket2
+          policy: read-write
+        - name: bucket3
+          policy: read-write
+      minio_users:
+        - name: user1
+          password: supers1cret0
+          buckets_acl:
+            - name: bucket1
+              policy: read-write
+            - name: bucket2
+              policy: read-only
+            - name: bucket3
+              policy: custom
+              custom:
+                - rule: |
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:GetObject",
+                        "s3:DeleteObject",
+                        "s3:PutObject",
+                        "s3:AbortMultipartUpload",
+                        "s3:ListMultipartUploadParts"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::bucket3/*"
+                    ]
+                - rule: |
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:ListBucket"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::bucket3"
+                    ]

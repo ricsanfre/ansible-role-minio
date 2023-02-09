@@ -59,6 +59,26 @@ Available variables are listed below along with default values (see `defaults\ma
     - /var/lib/minio
   ```
 
+  ```yaml
+  minio_server_cluster_nodes: [ ]
+  ```
+
+  Set a list of nodes to create a [distributed cluster (Multi-Node Multi-Drive deployment)](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html#deploy-minio-distributed).
+
+  In this mode, ansible will create your server datadirs, but use this list for the server startup. Note you will need a number of disks to satisfy Minio's distributed storage requirements.
+
+  Example:
+
+  ```yaml
+  minio_server_datadirs:
+    - '/mnt/disk1/minio'
+    - '/mnt/disk2/minio'
+    - '/mnt/disk3/minio'
+    - '/mnt/disk4/minio'
+  minio_server_cluster_nodes:
+    - 'https://minio{1...4}.example.net:9091/mnt/disk{1...4}/minio'
+  ```
+
 - Minio client configuration
   
   Connection alias name `minio_alias` and whether validate or not SSL certificates (`minio_validate_certificates`)

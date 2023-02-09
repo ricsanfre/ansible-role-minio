@@ -60,12 +60,16 @@ Available variables are listed below along with default values (see `defaults\ma
   ```
 
   ```yaml
-  minio_server_cluster_nodes: [ ]
+  minio_server_cluster_nodes: []
   ```
 
-  Set a list of nodes to create a [distributed cluster (Multi-Node Multi-Drive deployment)](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html#deploy-minio-distributed).
+  Set a list of nodes to create a [distributed cluster (Multi-Node Multi-Drive deployment)](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html).
 
-  In this mode, ansible will create your server datadirs, but use this list for the server startup. Note you will need a number of disks to satisfy Minio's distributed storage requirements.
+  In this mode, ansible will create your server datadirs (`minio_serverdata_dirs`), but use this list (`minio_server_cluster_nodes`) for the server startup.
+
+  > Multi-drive configuration requires datadirs on separate disks to satisfy Minio's distributed storage requirements.
+
+  See recommendations for using, same configuration in all nodes, sequential hostnames and local-atached storage with sequential mounts in the documentation (https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html)
 
   Example:
 

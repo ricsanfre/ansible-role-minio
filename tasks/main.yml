@@ -9,7 +9,9 @@
   include_tasks: install_client.yml
   when: minio_install_client
 
-# Add local minio server to Minio client
+# Configure server/cluster
 - name: Configure server
   include_tasks: configure_server.yml
   when: minio_url|length > 0 and minio_install_client
+  # run once per cluster
+  run_once: true

@@ -11,6 +11,8 @@ minio_user: minio
 minio_server_make_datadirs: true
 minio_server_datadirs:
   - /var/lib/minio
+# Minio server cluster node list.
+minio_server_cluster_nodes: []
 
 # minio bin path
 minio_server_bin: /usr/local/bin/minio

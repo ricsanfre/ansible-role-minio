@@ -192,15 +192,15 @@ def main():
     policy = module.params["policy"]
     m = REMatcher(module.params["s3_url"])
 
-    if m.match(r"^http://([\w./:]+)"):
+    if m.match(r"^http://([\w./:-]+)"):
         is_https = False
         unschemed_s3_url = m.group(1)
 
-    elif m.match(r"^https://([\w./:]+)"):
+    elif m.match(r"^https://([\w./:-]+)"):
         is_https = True
         unschemed_s3_url = m.group(1)
 
-    elif m.match(r"^(?:[a-zA-Z0-9]+:\/\/)*([\w./:]+)"):
+    elif m.match(r"^(?:[a-zA-Z0-9]+:\/\/)*([\w./:-]+)"):
         is_https = True
         unschemed_s3_url = m.group(1)
         

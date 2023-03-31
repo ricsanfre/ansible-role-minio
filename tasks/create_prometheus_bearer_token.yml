@@ -7,7 +7,7 @@
 
 - name: Create prometheus bearer token
   command: "{{ mc_command }} admin prometheus generate {{ minio_alias }} -json"
-  changed: false
+  changed_when: false
   register: prometheus_token
   when: not prometheus_toke_file.stat.exists
 

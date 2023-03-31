@@ -24,13 +24,13 @@
   register: create_policy
 
 - name: Add user policy
-  command: "{{ mc_command }} admin policy add {{ minio_alias }} {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
+  command: "{{ mc_command }} admin policy create {{ minio_alias }} {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
   register: add_policy
   when: create_policy.changed
   changed_when: '"Added policy `" + user.name + "` successfully" in add_policy.stdout'
 
 - name: Apply user policy
-  command: "{{ mc_command }} admin policy set {{ minio_alias }} {{ user.name }} user={{ user.name }}"
+  command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
   register: apply_policy
   when: create_policy.changed
   changed_when: '"Policy `" + user.name + "` is set on user `" + user.name + "`" in apply_policy.stdout'

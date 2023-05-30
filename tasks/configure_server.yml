@@ -9,19 +9,10 @@
     mc_command: "mc"
   when: minio_validate_certificate
 
-- name: Check whether alias is already configured
-  command: "{{ mc_command }} alias list {{ minio_alias }}"
-  register: get_alias
-  changed_when: false
-  ignore_errors: true
-
 - name: Configure minio connection alias
   command: "{{ mc_command }} alias set {{ minio_alias }} {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
   register: alias_command
   changed_when: '"Added `" + minio_alias + "` successfully" in alias_command.stdout'
-  when:
-    - get_alias.rc==1
-    - '"No such alias `" + minio_alias + "` found." in get_alias.stderr'
 
 - name: Create Minio Users
   include_tasks: create_minio_user.yml

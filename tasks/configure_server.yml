@@ -12,7 +12,8 @@
 - name: Configure minio connection alias
   command: "{{ mc_command }} alias set {{ minio_alias }} {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
   register: alias_command
-  changed_when: '"Added `" + minio_alias + "` successfully" in alias_command.stdout'
+  changed_when: false
+  failed_when: '"Added `" + minio_alias + "` successfully" not in alias_command.stdout'
 
 - name: Create Minio Users
   include_tasks: create_minio_user.yml

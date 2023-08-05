@@ -120,13 +120,15 @@ Available variables are listed below along with default values (see `defaults\ma
   ```yml
   minio_buckets:
     - name: bucket1
-      policy: read-write
+      policy: read-only
     - name: bucket2
       policy: read-write
+    - name: bucket3
+      policy: private
   ```
   > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Role ensure that PIP is installed and install `minio` package.
 
-  During bucket creation two type of policies can be specified: `read-only` or `read-write` buckets.
+  During bucket creation three types of policy can be specified: `private`, `read-only` or `read-write` buckets.
 
 - Users to be created and buckets ACLs
 

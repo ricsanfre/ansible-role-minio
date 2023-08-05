@@ -43,6 +43,8 @@
           policy: read-write
         - name: bucket3
           policy: read-write
+        - name: bucket4
+          policy: private
       minio_users:
         - name: user1
           password: supers1cret0
@@ -74,3 +76,5 @@
                     "Resource": [
                         "arn:aws:s3:::bucket3"
                     ]
+            - name: bucket4
+              policy: read-only

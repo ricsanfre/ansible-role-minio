@@ -24,7 +24,7 @@
     access_key: "{{ minio_root_user }}"
     secret_key: "{{ minio_root_password }}"
     state: present
-    policy: "{{ bucket.policy }}"
+    policy: "{{ omit if bucket.policy == 'private' else bucket.policy }}"
     validate_certs: false
   with_items:
     - "{{ minio_buckets }}"

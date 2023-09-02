@@ -14,6 +14,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /data/minio/disk1:/mnt/disk
+    cgroupns_mode: host
     tmpfs:
       - /tmp
       - /run
@@ -40,6 +41,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /data/minio/disk2:/mnt/disk
+    cgroupns_mode: host
     tmpfs:
       - /tmp
       - /run
@@ -58,6 +60,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /data/minio/disk3:/mnt/disk
+    cgroupns_mode: host
     tmpfs:
       - /tmp
       - /run

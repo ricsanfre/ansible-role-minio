@@ -15,15 +15,15 @@
   changed_when: false
   failed_when: '"Added `" + minio_alias + "` successfully" not in alias_command.stdout'
 
+- name: Create Minio Buckets
+  include_tasks: create_minio_buckets.yml
+
 - name: Create Minio Users
   include_tasks: create_minio_user.yml
   with_items:
     - "{{ minio_users }}"
   loop_control:
     loop_var: "user"
-
-- name: Create Minio Buckets
-  include_tasks: create_minio_buckets.yml
 
 # Create Prometheus bearer token
 - name: Create Prometheus bearer token

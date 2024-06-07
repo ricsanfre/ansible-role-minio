@@ -45,8 +45,10 @@
               policy: read-write
             - name: bucket2
               policy: read-only
+              object_lock: true
             - name: bucket3
               policy: read-only
+              object_lock: false
             - name: bucket4
               policy: custom
               custom:

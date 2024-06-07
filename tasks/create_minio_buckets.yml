@@ -27,6 +27,7 @@
     state: present
     policy: "{{ omit if bucket.policy == 'private' else bucket.policy }}"
     validate_certs: false
+    object_lock: "{{ bucket.object_lock | default(false) }}"
   with_items:
     - "{{ minio_buckets }}"
   loop_control:

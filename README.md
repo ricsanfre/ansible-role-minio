@@ -39,7 +39,7 @@ Available variables are listed below along with default values (see `defaults\ma
   minio_server_addr: ""
   minio_console_port: "9092"
   ```
-  
+
   Minio admin user and password
   ```yml
   minio_root_user: ""
@@ -50,9 +50,9 @@ Available variables are listed below along with default values (see `defaults\ma
   ```yml
   minio_site_region: "eu-west-1"
   ```
-  
+
   Minio data directories (`minio_server_datadirs`) and whether force the creation in case they do not exist (`minio_server_make_datadirs`)
-  
+
   ```yml
   minio_server_make_datadirs: true
   minio_server_datadirs:
@@ -84,9 +84,9 @@ Available variables are listed below along with default values (see `defaults\ma
   ```
 
 - Minio client configuration
-  
+
   Connection alias name `minio_alias` and whether validate or not SSL certificates (`minio_validate_certificates`)
-  
+
   ```yml
   minio_validate_certificate: true
   minio_alias: "myminio"
@@ -114,21 +114,25 @@ Available variables are listed below along with default values (see `defaults\ma
 
 
 - Buckets to be created
-  
+
   Variable `minio_buckets` create the list of provided buckets, and applying a specifc policy. For creating the buckets, a modified version of Ansible Module from Alexis Facques is used (https://github.com/alexisfacques/ansible-module-s3-minio-bucket)
-  
+
   ```yml
   minio_buckets:
     - name: bucket1
       policy: read-only
     - name: bucket2
       policy: read-write
+      object_lock: false
     - name: bucket3
       policy: private
+      object_lock: true
   ```
   > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Role ensure that PIP is installed and install `minio` package.
 
   During bucket creation three types of policy can be specified: `private`, `read-only` or `read-write` buckets.
+
+  Minio object locking can also be enabled or disabled: `true` or `false`.
 
 - Users to be created and buckets ACLs
 
@@ -233,7 +237,7 @@ Available variables are listed below along with default values (see `defaults\ma
   minio_prometheus_bearer_token: false
   prometheus_bearer_token_output: "{{ minio_etc_dir }}/prometheus_bearer.json"
   ```
-  
+
   Setting `minio_prometheus_bearer_token` to true, generates a file `/etc/minio/prometheus_bearer.json` which contains the result of executing the command:
 
   `mc admin prometheus generate myminio -json`

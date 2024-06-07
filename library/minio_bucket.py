@@ -44,6 +44,11 @@ options:
             - When set to "no", SSL certificates will not be validated for
               boto versions >= 2.6.0.
         required: false
+    object_lock:
+        description:
+            - When set to "yes", buckets will be created with
+              object locking enabled.
+        required: false
 """
 
 EXAMPLES = """
@@ -182,7 +187,8 @@ def main():
             secret_key=dict(required=True, type="str"),
             state=dict(required=False, type="str", default="present", choices=["absent","present"]),
             policy=dict(required=False, type="str", choices=["read-only","write-only","read-write"]),
-            validate_certs=dict(required=False, type="bool", default=True)
+            validate_certs=dict(required=False, type="bool", default=True),
+            object_lock=dict(required=False, type="bool", default=False)
         ),
         # No changes will be made to this environment with this module
         supports_check_mode=True
@@ -203,7 +209,7 @@ def main():
     elif m.match(r"^(?:[a-zA-Z0-9]+:\/\/)*([\w./:-]+)"):
         is_https = True
         unschemed_s3_url = m.group(1)
-        
+
     else:
         raise UncheckedException("Unhandled structure for 's3_url'.")
 
@@ -242,7 +248,10 @@ def main():
                 module.exit_json(faised=False, changed=True)
 
             if not client.bucket_exists(bucket_name):
-                client.make_bucket(bucket_name)
+                client.make_bucket(
+                    bucket_name=bucket_name,
+                    object_lock=module.params["object_lock"]
+                    )
                 if policy:
                     client.set_bucket_policy(bucket_name, json.dumps({
                         "Version": "2012-10-17",

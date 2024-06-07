@@ -1,5 +1,10 @@
 ---
 
+- name: Update apt cache if package manager is apt
+  apt:
+    update_cache: yes
+  when: ansible_facts['pkg_mgr'] == "apt"
+
 - name: Ensure PIP is installed.
   package:
     name:

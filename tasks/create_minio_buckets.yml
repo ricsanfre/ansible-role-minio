@@ -13,6 +13,7 @@
       - minio
     state: present
     extra_args: --upgrade
+  environment: "{{ minio_pip_environment_vars }}"
   register: package_install
   until: package_install is succeeded
 

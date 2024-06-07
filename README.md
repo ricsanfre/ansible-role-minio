@@ -238,6 +238,21 @@ Available variables are listed below along with default values (see `defaults\ma
 
   `mc admin prometheus generate myminio -json`
 
+- Install MinIO pip library to system packages
+
+  As noted in the `pip` module documentation:
+  > Python installations marked externally-managed (as defined by PEP668)
+  > cannot be updated by pip versions >= 23.0.1 without the use of a
+  > virtual environment or setting the environment variable
+  > `PIP_BREAK_SYSTEM_PACKAGES=1`.
+
+  This (and any other pip environment variables) can be set with
+  `minio_pip_environment_vars` like so:
+
+  ```yml
+  minio_pip_environment_var:
+   PIP_BREAK_SYSTEM_PACKAGES: "1"
+  ```
 
 Dependencies
 ------------

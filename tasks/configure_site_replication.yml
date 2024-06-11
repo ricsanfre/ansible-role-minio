@@ -1,0 +1,12 @@
+---
+
+- name: Create Replication Site Alias
+  command: "{{ mc_command }} alias set {{ site.name }} {{ site.url }} {{ site.admin_user }} {{ site.admin_password }}"
+  register: alias_command
+  changed_when: false
+  failed_when: '"Added `" + site.name + "` successfully" not in alias_command.stdout'
+
+- name: Adding Replication Site
+  command: "{{ mc_command }} admin replicate add {{ minio_alias }} {{ site.name }}"
+  register: add_replication_site
+  changed_when: '"successfully" in add_replication_site.stdout'

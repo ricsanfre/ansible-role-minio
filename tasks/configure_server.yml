@@ -25,6 +25,13 @@
   loop_control:
     loop_var: "user"
 
+- name: Configure Site Replication
+  include_tasks: configure_site_replication.yml
+  with_items:
+    - "{{ replication_sites }}"
+  loop_control:
+    loop_var: "site"
+
 # Create Prometheus bearer token
 - name: Create Prometheus bearer token
   include_tasks: create_prometheus_bearer_token.yml

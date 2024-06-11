@@ -1,0 +1,85 @@
+---
+dependency:
+  name: galaxy
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+driver:
+  name: docker
+platforms:
+  - name: minio1.ricsanfre.com
+    image: "ricsanfre/docker-${MOLECULE_DISTRO:-ubuntu}-ansible:${MOLECULE_RELEASE:-latest}"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - /data/minio/disk1:/mnt/disk
+    cgroupns_mode: host
+    tmpfs:
+      - /tmp
+      - /run
+      - /run/lock
+    privileged: true
+    pre_build_image: true
+    exposed_ports:
+      - 9091/tcp
+      - 9092/tcp
+    docker_networks:
+      - name: internal
+        ipam_config:
+          - subnet: "10.11.0.0/16"
+            gateway: "10.11.0.254"
+    networks:
+      - name: internal
+        ipv4_address: "10.11.0.1"
+    published_ports:
+      - 0.0.0.0:9091:9091/tcp
+      - 0.0.0.0:9092:9092/tcp
+  - name: minio2.ricsanfre.com
+    image: "ricsanfre/docker-${MOLECULE_DISTRO:-ubuntu}-ansible:${MOLECULE_RELEASE:-latest}"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - /data/minio/disk2:/mnt/disk
+    cgroupns_mode: host
+    tmpfs:
+      - /tmp
+      - /run
+      - /run/lock
+    privileged: true
+    pre_build_image: true
+    exposed_ports:
+      - 9091/tcp
+      - 9092/tcp
+    networks:
+      - name: internal
+        ipv4_address: "10.11.0.2"
+  - name: minio3.ricsanfre.com
+    image: "ricsanfre/docker-${MOLECULE_DISTRO:-ubuntu}-ansible:${MOLECULE_RELEASE:-latest}"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - /data/minio/disk3:/mnt/disk
+    cgroupns_mode: host
+    tmpfs:
+      - /tmp
+      - /run
+      - /run/lock
+    privileged: true
+    pre_build_image: true
+    exposed_ports:
+      - 9091/tcp
+      - 9092/tcp
+    networks:
+      - name: internal
+        ipv4_address: "10.11.0.3"
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  inventory:
+    host_vars:
+      localhost:
+        ansible_user: ${USER}
+verifier:
+  name: ansible

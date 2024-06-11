@@ -1,0 +1,48 @@
+---
+- name: Minio1
+  hosts: minio1.ricsanfre.com
+  become: true
+  gather_facts: true
+  roles:
+    - role: ricsanfre.minio
+      minio_root_user: "miniadmin1"
+      minio_root_password: "supers1cret01"
+      minio_alias: "minio1"
+- name: Minio2
+  hosts: minio2.ricsanfre.com
+  become: true
+  gather_facts: true
+  roles:
+    - role: ricsanfre.minio
+      minio_alias: "minio2"
+      minio_root_user: "miniadmin2"
+      minio_root_password: "supers1cret02"
+- name: Converge
+  hosts: minio3.ricsanfre.com
+  become: true
+  gather_facts: true
+  vars:
+  roles:
+    - role: ricsanfre.minio
+      minio_root_user: "miniadmin3"
+      minio_root_password: "supers1cret03"
+      minio_alias: "minio3"
+      minio_buckets:
+        - name: bucket1
+          policy: read-write
+          object_lock: true
+        - name: bucket2
+          policy: read-only
+          object_lock: true
+        - name: bucket3
+          policy: private
+          object_lock: true
+      replication_sites:
+        - name: minio1
+          url: "http://minio1.ricsanfre.com:9091"
+          admin_user: "miniadmin1"
+          admin_password: "supers1cret01"
+        - name: minio2
+          url: "http://minio2.ricsanfre.com:9091"
+          admin_user: "miniadmin2"
+          admin_password: "supers1cret02"

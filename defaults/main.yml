@@ -58,6 +58,14 @@ minio_buckets: []
 #    policy: private
 #    object_lock: false
 
+# Replication Sites
+replication_sites: []
+# replication_sites:
+#     - name: myminio2
+#       url: ""
+#       admin_user: ""
+#       admin_password: ""
+
 minio_users: []
 # minio_users:
 #  - name: user1

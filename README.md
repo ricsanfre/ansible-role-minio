@@ -267,7 +267,7 @@ Available variables are listed below along with default values (see `defaults\ma
      - name: myminio2
        url: "http://replication.minio.com:9091"
        admin_user: "myminio2"
-       admin_password: "supers1cret02"ecret"
+       admin_password: "supers1cret02"
    ```
    The `url` is the url of the site that will be replicated to from the currently configured site in the playbook. The `admin_user` and `admin_password` variables are authentication credentials for the site to be replicated to with admin privileges.
 

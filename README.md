@@ -258,6 +258,26 @@ Available variables are listed below along with default values (see `defaults\ma
    PIP_BREAK_SYSTEM_PACKAGES: "1"
   ```
 
+- Site Replication
+
+   Variable `replication_sites` creates the list of multiple independent MinIO deployments to configure as a cluster of replicas called peer sites. For further information on what is replicated across sites refer to the minio documentation (https://min.io/docs/minio/linux/operations/install-deploy-manage/multi-site-replication.html)
+
+  ```yml
+  replication_sites:
+     - name: myminio2
+       url: "http://replication.minio.com:9091"
+       admin_user: "myminio2"
+       admin_password: "supers1cret02"
+   ```
+   The `url` is the url of the site that will be replicated to from the currently configured site in the playbook. The `admin_user` and `admin_password` variables are authentication credentials for the site to be replicated to with admin privileges.
+
+   As noted in the `site-replication` documentation
+   > - Initially, only **one** of the sites added for replication may have data. After site-replication is successfully configured, this data is replicated to the other (initially empty) sites. Subsequently, objects may be written to any of the sites, and they will be replicated to all other sites.
+   > - **Removing a site** is not allowed from a set of replicated sites once configured.
+   > - All sites must be using the **same** external IDP(s) if any.
+   > - For [SSE-S3 or SSE-KMS encryption via KMS](https://min.io/docs/minio/linux/operations/server-side-encryption.html "MinIO KMS Guide"), all sites **must**  have access to a central KMS deployment. This can be achieved via a central KES server or multiple KES servers (say one per site) connected via a central KMS (Vault) server.
+
+
 Dependencies
 ------------
 

@@ -10,8 +10,6 @@
   command: "{{ mc_command }} admin replicate info {{ minio_alias }} --json"
   register: replication_info
 
-- debug: msg="{{ replication_info.stdout }}"
-
 - name: Setting replication state fact
   set_fact:
     replication_info_json : "{{ replication_info.stdout | from_json }}"
@@ -19,8 +17,6 @@
 - name: List of existing replication site names
   set_fact:
     existing_replication_sites: "{{ replication_info_json.sites | default([]) | map(attribute='name') | list }}"
-
-- debug: msg="{{ existing_replication_sites }}"
 
 - name: Remove replication sites no longer configured
   command: "{{ mc_command }} admin replicate remove {{ minio_alias }} {{ item }} --force"

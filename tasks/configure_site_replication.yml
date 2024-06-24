@@ -1,12 +1,36 @@
 ---
-
-- name: Create Replication Site Alias
-  command: "{{ mc_command }} alias set {{ site.name }} {{ site.url }} {{ site.admin_user }} {{ site.admin_password }}"
+- name: Create replication site alias
+  command: "{{ mc_command }} alias set {{ item.name }} {{ item.url }} {{ item.admin_user }} {{ item.admin_password }}"
   register: alias_command
   changed_when: false
-  failed_when: '"Added `" + site.name + "` successfully" not in alias_command.stdout'
+  failed_when: '"Added `" + item.name + "` successfully" not in alias_command.stdout'
+  with_items: "{{ replication_sites }}"
 
-- name: Adding Replication Site
-  command: "{{ mc_command }} admin replicate add {{ minio_alias }} {{ site.name }}"
+- name: Get replication site state for Minio instance
+  command: "{{ mc_command }} admin replicate info {{ minio_alias }} --json"
+  register: replication_info
+
+- debug: msg="{{ replication_info.stdout }}"
+
+- name: Setting replication state fact
+  set_fact:
+    replication_info_json : "{{ replication_info.stdout | from_json }}"
+
+- name: List of existing replication site names
+  set_fact:
+    existing_replication_sites: "{{ replication_info_json.sites | default([]) | map(attribute='name') | list }}"
+
+- debug: msg="{{ existing_replication_sites }}"
+
+- name: Remove replication sites no longer configured
+  command: "{{ mc_command }} admin replicate remove {{ minio_alias }} {{ item }} --force"
+  when: replication_sites | default([]) | selectattr('name','equalto',item) | list | count == 0 and item != minio_alias
+  with_items: "{{ existing_replication_sites }}"
+  register: remove_replication_site
+  changed_when: '"successfully" in remove_replication_site.stdout'
+
+- name: Adding replication sites
+  command: "{{ mc_command }} admin replicate add {{ minio_alias }} {{ replication_sites | map(attribute='name') | join(' ') }}"
+  when: replication_sites | default([]) | map(attribute='name') | list | difference(existing_replication_sites) | length > 0
   register: add_replication_site
   changed_when: '"successfully" in add_replication_site.stdout'

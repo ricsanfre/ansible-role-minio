@@ -12,7 +12,7 @@
 
 - name: Setting replication state fact
   set_fact:
-    replication_info_json : "{{ replication_info.stdout | from_json }}"
+    replication_info_json: "{{ replication_info.stdout | from_json }}"
 
 - name: List of existing replication site names
   set_fact:

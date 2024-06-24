@@ -25,12 +25,9 @@
   loop_control:
     loop_var: "user"
 
-- name: Configure Site Replication
+- name: Configure Minio Site Replication
   include_tasks: configure_site_replication.yml
-  with_items:
-    - "{{ replication_sites }}"
-  loop_control:
-    loop_var: "site"
+  when: replication_sites
 
 # Create Prometheus bearer token
 - name: Create Prometheus bearer token

@@ -1,12 +1,12 @@
 ---
 - name: Set insecure mc command
   set_fact:
-    mc_command: "mc --insecure"
+    mc_command: "{{ minio_client_bin }} --insecure"
   when: not minio_validate_certificate
 
 - name: Set secure mc command
   set_fact:
-    mc_command: "mc"
+    mc_command: "{{ minio_client_bin }}"
   when: minio_validate_certificate
 
 - name: Configure minio connection alias

@@ -1,13 +1,8 @@
 ---
-- name: Set insecure mc command
-  set_fact:
-    mc_command: "{{ minio_client_bin }} --insecure"
-  when: not minio_validate_certificate
 
-- name: Set secure mc command
+- name: Set minio command
   set_fact:
-    mc_command: "{{ minio_client_bin }}"
-  when: minio_validate_certificate
+    mc_command: "{{ minio_client_bin }} {% if not minio_validate_certificate %}--insecure{% endif %}"
 
 - name: Configure minio connection alias
   command: "{{ mc_command }} alias set {{ minio_alias }} {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
@@ -17,6 +12,7 @@
 
 - name: Create Minio Buckets
   include_tasks: create_minio_buckets.yml
+  when: minio_buckets|length>0
 
 - name: Create Minio Users
   include_tasks: create_minio_user.yml
@@ -24,10 +20,11 @@
     - "{{ minio_users }}"
   loop_control:
     loop_var: "user"
+  when: minio_users|length>0
 
 - name: Configure Minio Site Replication
   include_tasks: configure_site_replication.yml
-  when: replication_sites
+  when: replication_sites|length>0
 
 # Create Prometheus bearer token
 - name: Create Prometheus bearer token

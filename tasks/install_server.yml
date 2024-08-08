@@ -1,5 +1,10 @@
 ---
 
+- name: Set secure minio url if not defined
+  set_fact:
+    minio_url: "{% if minio_enable_tls %}https{% else %}http{% endif %}://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
+  when: minio_url | length == 0
+
 - name: Compose the Minio server download url
   set_fact:
     _minio_server_download_url: "https://dl.minio.io/server/minio/release/linux-{{ go_arch }}/minio"
@@ -105,13 +110,3 @@
   service:
     name: minio
     enabled: true
-
-- name: Set secure minio url if not defined
-  set_fact:
-    minio_url: "https://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
-  when: minio_enable_tls and minio_url | length == 0
-
-- name: Set unsecure minio_url if not defined
-  set_fact:
-    minio_url: "http://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
-  when: not minio_enable_tls and minio_url | length == 0

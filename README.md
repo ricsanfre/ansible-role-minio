@@ -254,7 +254,7 @@ Available variables are listed below along with default values (see `defaults\ma
   `minio_pip_environment_vars` like so:
 
   ```yml
-  minio_pip_environment_var:
+  minio_pip_environment_vars:
    PIP_BREAK_SYSTEM_PACKAGES: "1"
   ```
 

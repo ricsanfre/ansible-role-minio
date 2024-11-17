@@ -81,3 +81,6 @@ prometheus_bearer_token_output: "{{ minio_etc_dir }}/prometheus_bearer.json"
 
 # Environment variables to use when calling Pip
 minio_pip_environment_vars: {}
+
+# Path to minio virtual environment, created to avoid breakage with system managed python libraries
+minio_venv_path: "/opt/minio-venv"

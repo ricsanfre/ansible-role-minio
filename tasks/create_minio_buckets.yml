@@ -30,8 +30,8 @@
     policy: "{{ omit if bucket.policy == 'private' else bucket.policy }}"
     validate_certs: false
     object_lock: "{{ bucket.object_lock | default(false) }}"
-  environment:
-    PATH: "{{ minio_venv_path }}/bin:$PATH"
+  vars:
+    ansible_python_interpreter: "{{ minio_venv_path }}/bin/python"
   with_items:
     - "{{ minio_buckets }}"
   loop_control:

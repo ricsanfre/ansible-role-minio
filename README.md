@@ -242,20 +242,41 @@ Available variables are listed below along with default values (see `defaults\ma
 
   `mc admin prometheus generate myminio -json`
 
-- Install MinIO pip library to system packages
 
-  As noted in the `pip` module documentation:
-  > Python installations marked externally-managed (as defined by PEP668)
-  > cannot be updated by pip versions >= 23.0.1 without the use of a
-  > virtual environment or setting the environment variable
-  > `PIP_BREAK_SYSTEM_PACKAGES=1`.
+- Install Minio pip library to python virtualenv
 
-  This (and any other pip environment variables) can be set with
-  `minio_pip_environment_vars` like so:
+  Python virtual env is created to encapsulated installation of required python packages (minio).
 
-  ```yml
-  minio_pip_environment_vars:
-   PIP_BREAK_SYSTEM_PACKAGES: "1"
+  This is to avoid errors pip installation errors in newer python releases, included in Ubuntu 24.04, having a protection on python system packages.
+
+  ```shell
+  # pip3 install --upgrade minio
+  error: externally-managed-environment
+
+  × This environment is externally managed
+  ╰─> To install Python packages system-wide, try apt install
+      python3-xyz, where xyz is the package you are trying to
+      install.
+
+      If you wish to install a non-Debian-packaged Python package,
+      create a virtual environment using python3 -m venv path/to/venv.
+      Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+      sure you have python3-full installed.
+
+      If you wish to install a non-Debian packaged Python application,
+      it may be easiest to use pipx install xyz, which will manage a
+      virtual environment for you. Make sure you have pipx installed.
+
+      See /usr/share/doc/python3.12/README.venv for more information.
+
+  note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+  hint: See PEP 668 for the detailed specification.
+  ```
+
+  Location of the virtual environemnt can be configured using following ansible variable:
+  ```yaml
+  # Path to minio virtual environment, created to avoid breakage with system managed python libraries
+  minio_venv_path: "/opt/minio-venv"
   ```
 
 - Site Replication

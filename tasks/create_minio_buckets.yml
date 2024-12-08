@@ -4,6 +4,7 @@
   package:
     name:
       - python3-pip
+      - python3-virtualenv
       - python3-setuptools
     state: present
 
@@ -13,6 +14,7 @@
       - minio
     state: present
     extra_args: --upgrade
+    virtualenv: "{{ minio_venv_path }}"
   environment: "{{ minio_pip_environment_vars }}"
   register: package_install
   until: package_install is succeeded
@@ -28,6 +30,8 @@
     policy: "{{ omit if bucket.policy == 'private' else bucket.policy }}"
     validate_certs: false
     object_lock: "{{ bucket.object_lock | default(false) }}"
+  vars:
+    ansible_python_interpreter: "{{ minio_venv_path }}/bin/python"
   with_items:
     - "{{ minio_buckets }}"
   loop_control:

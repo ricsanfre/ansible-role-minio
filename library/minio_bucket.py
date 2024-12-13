@@ -39,6 +39,10 @@ options:
         description:
             - Policies to bind to the s3 bucket.
         required: false
+    versioning:
+        description:
+            - Bucket Versioning.
+        required: false
     validate_certs:
         description:
             - When set to "no", SSL certificates will not be validated for
@@ -59,10 +63,13 @@ EXAMPLES = """
     secret_key: my_secret_key
     policy:
       - *:read-only
+    versioning: enabled
     state: present
 """
 
 from ansible.module_utils.basic import AnsibleModule
+from minio.commonconfig import ENABLED
+from minio.versioningconfig import VersioningConfig, SUSPENDED
 
 import re
 import urllib3
@@ -175,6 +182,12 @@ def get_rw_statements(bucket_name):
         }
     ]
 
+def set_bucket_versioning(client, bucket_name, bucket_versioning):
+    if bucket_versioning == "enabled":
+        client.set_bucket_versioning(bucket_name, VersioningConfig(ENABLED))
+    if bucket_versioning == "suspended":
+        client.set_bucket_versioning(bucket_name, VersioningConfig(SUSPENDED))
+
 def main():
     exit_message = dict(failed=False)
 
@@ -187,6 +200,7 @@ def main():
             secret_key=dict(required=True, type="str"),
             state=dict(required=False, type="str", default="present", choices=["absent","present"]),
             policy=dict(required=False, type="str", choices=["read-only","write-only","read-write"]),
+            versioning=dict(required=False, type="str", choices=["suspended","enabled"]),
             validate_certs=dict(required=False, type="bool", default=True),
             object_lock=dict(required=False, type="bool", default=False)
         ),
@@ -196,6 +210,7 @@ def main():
 
     bucket_name = module.params["name"]
     policy = module.params["policy"]
+    bucket_versioning = module.params["versioning"]
     m = REMatcher(module.params["s3_url"])
 
     if m.match(r"^http://([\w./:-]+)"):
@@ -264,6 +279,7 @@ def main():
                 exit_message = dict(failed=False, changed=True)
             else:
                 exit_message = dict(failed=False, changed=False)
+            set_bucket_versioning(client, bucket_name, bucket_versioning)
 
     except urllib3.exceptions.MaxRetryError:
         exit_message = dict(

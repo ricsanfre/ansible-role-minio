@@ -37,6 +37,12 @@
         - name: bucket3
           policy: private
           object_lock: true
+        - name: bucket5
+          policy: read-write
+          versioning: enabled
+        - name: bucket6
+          policy: read-write
+          versioning: suspended
       replication_sites:
         - name: minio1
           url: "http://minio1.ricsanfre.com:9091"

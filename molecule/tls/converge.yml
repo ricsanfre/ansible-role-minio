@@ -28,8 +28,6 @@
       minio_url: "https://{{ server_hostname }}:9091"
       minio_validate_certificate: false
       minio_prometheus_bearer_token: true
-      minio_pip_environment_vars:
-        PIP_BREAK_SYSTEM_PACKAGES: "1"
       minio_buckets:
         - name: bucket1
           policy: read-write
@@ -37,7 +35,6 @@
           policy: read-only
         - name: bucket3
           policy: private
-          versioning: bar
         - name: bucket4
           policy: private
         - name: bucket5

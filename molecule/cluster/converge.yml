@@ -32,8 +32,6 @@
       minio_url: "https://{{ server_hostname }}:{{ minio_server_port }}"
       minio_validate_certificate: false
       minio_prometheus_bearer_token: true
-      minio_pip_environment_vars:
-        PIP_BREAK_SYSTEM_PACKAGES: "1"
       minio_server_datadirs:
         - '/mnt/disk/minio'
       minio_server_cluster_nodes:

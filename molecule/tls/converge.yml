@@ -37,6 +37,12 @@
           policy: private
         - name: bucket4
           policy: private
+        - name: bucket5
+          policy: read-write
+          versioning: enabled
+        - name: bucket6
+          policy: read-write
+          versioning: suspended
       minio_users:
         - name: user1
           password: supers1cret0

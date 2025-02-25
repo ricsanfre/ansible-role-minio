@@ -17,6 +17,7 @@
 
 - name: Create Minio Buckets
   include_tasks: create_minio_buckets.yml
+  when: minio_buckets | length > 0
 
 - name: Create Minio Users
   include_tasks: create_minio_user.yml

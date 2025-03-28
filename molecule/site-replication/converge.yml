@@ -41,6 +41,9 @@
           policy: read-write
           versioning: enabled
         - name: bucket6
+          policy: write-only
+          versioning: enabled
+        - name: bucket7
           policy: read-write
           versioning: suspended
       replication_sites:

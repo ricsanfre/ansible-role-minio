@@ -56,6 +56,10 @@
               policy: read-only
               object_lock: false
             - name: bucket4
+              policy: write-only
+              object_lock: false
+              versioning: "enabled"
+            - name: bucket5
               policy: custom
               custom:
                 - rule: |

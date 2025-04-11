@@ -25,7 +25,6 @@
       minio_root_user: "miniadmin"
       minio_root_password: "supers1cret0"
       minio_enable_tls: true
-      minio_url: "https://{{ server_hostname }}:9091"
       minio_validate_certificate: false
       minio_prometheus_bearer_token: true
       minio_buckets:

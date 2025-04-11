@@ -139,7 +139,7 @@ Available variables are listed below along with default values (see `defaults\ma
   Users can be automatically created using  `minio_users` variable: a list of users can be provided, each user with three variables `name` (user name), `password` (user password) and `buckets_acl` list of buckets and type of access granted to each bucket (read-only or read-write).
   The role automatically create policy json files containing the user policy statements and load them into the server.
 
-  Predefined `read-only` and `read-write` policies, containing pre-defined access statements, can be used. Custom policies can be also defined using  `custom` policy. In this case list of access statements need to be provided.
+  Predefined `read-only`,`write-only` and `read-write` policies, containing pre-defined access statements, can be used. Custom policies can be also defined using  `custom` policy. In this case list of access statements need to be provided.
 
 
   ```yml

@@ -16,7 +16,7 @@
             "arn:aws:s3:::{{ acl['name'] }}",
             "arn:aws:s3:::{{ acl['name'] }}/*"
         ]
-    {{ "}," if not loop.last else "}" }}  
+    {{ "}," if not loop.last else "}" }}
 {% endif %}
 {% if acl['policy'] == 'read-only' %}
     {
@@ -31,11 +31,22 @@
         ]
     {{ "}," if not loop.last else "}" }}
 {% endif %}
+{% if acl['policy'] == 'write-only' %}
+    {
+        "Effect": "Allow",
+        "Action": [
+            "s3:PutObject"
+        ],
+        "Resource": [
+            "arn:aws:s3:::{{ acl['name'] }}/*"
+        ]
+    {{ "}," if not loop.last else "}" }}
+{% endif %}
 {% if acl['policy'] == 'custom' and acl['custom'] %}
 {% for custom in acl.custom %}
     {
         {{ custom['rule'] }}
-    {{ "}," if not loop.last else "}" }}    
+    {{ "}," if not loop.last else "}" }}
 {% endfor %}
 {% endif %}
 {% endif %}

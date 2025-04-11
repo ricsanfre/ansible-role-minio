@@ -124,6 +124,9 @@ Available variables are listed below along with default values (see `defaults\ma
   > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Role ensure that PIP is installed and install `minio` package.
 
   During bucket creation three types of policy can be specified: `private`, `read-only` or `read-write` buckets.
+  >Reminder: The described configuration enables anonymous access by default.
+  >To restrict access by users, you need to specify a  `policy: private`
+
 
   Minio object locking can also be enabled or disabled: `true` or `false`.
 

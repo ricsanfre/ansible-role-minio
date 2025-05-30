@@ -22,6 +22,13 @@ Available variables are listed below along with default values (see `defaults\ma
   ```
 - Minio server installation details
 
+  Minio release version to install
+
+  ```yml
+  minio_server_version: "RELEASE.2025-04-22T22-12-26Z"
+  minio_mc_version: "RELEASE.2025-04-16T18-13-26Z"
+  ```
+
   Minio UNIX user/group
   ```yml
   minio_group: minio
@@ -124,8 +131,8 @@ Available variables are listed below along with default values (see `defaults\ma
   > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Role ensure that PIP is installed and install `minio` package.
 
   During bucket creation three types of policy can be specified: `private`, `read-only` or `read-write` buckets.
-  >Reminder: The described configuration enables anonymous access by default.
-  >To restrict access by users, you need to specify a  `policy: private`
+  > Setting policy bucket to `read-only` or `read-write` enables anonymous access to the bucket (public bucket).
+  > To rekeep the bucket private and not enable annymous access `private` policy needs to be specified
 
 
   Minio object locking can also be enabled or disabled: `true` or `false`.

@@ -83,9 +83,9 @@
     content: "{{ minio_key }}"
     owner: "{{ minio_user }}"
     group: "{{ minio_user }}"
-    mode: 0644
+    mode: 0640
   become: true
-  when: minio_enable_tls
+  when: minio_enable_tls and (minio_key | default("")) != ""
   notify: Restart minio
 
 - name: Copy cert file
@@ -94,9 +94,9 @@
     content: "{{ minio_cert }}"
     owner: "{{ minio_user }}"
     group: "{{ minio_user }}"
-    mode: 0644
+    mode: 0640
   become: true
-  when: minio_enable_tls
+  when: minio_enable_tls and (minio_cert | default("")) != ""
   notify: Restart minio
 
 - name: Flush handlers

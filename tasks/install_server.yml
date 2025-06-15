@@ -106,6 +106,7 @@
   service:
     name: minio
     enabled: true
+    state: started
 
 - name: Set secure minio url if not defined
   set_fact:

@@ -44,9 +44,8 @@
 {% endif %}
 {% if acl['policy'] == 'custom' and acl['custom'] %}
 {% for custom in acl.custom %}
-    {
-        {{ custom['rule'] }}
-    {{ "}," if not loop.last else "}" }}
+    {{ custom['rule'] | to_json }}
+    {{ "," if not loop.last }}
 {% endfor %}
 {% endif %}
 {% endif %}

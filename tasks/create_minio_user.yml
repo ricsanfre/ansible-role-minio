@@ -29,8 +29,18 @@
   when: create_policy.changed
   changed_when: '"Added policy `" + user.name + "` successfully" in add_policy.stdout'
 
+- name: Get policies attached to user
+  command: "{{ mc_command }} admin policy entities {{minio_alias }} --user {{ user.name }} --json"
+  register: get_policies
+  changed_when: False
+  failed_when: get_policies.rc != 0 or (get_policies.stdout | from_json)['status'] != "success"
+
+- name: Extract policies
+  set_fact:
+    user_policies: "{{ get_policies.stdout | from_json | community.general.json_query('result.userMappings[0].policies') | default([]) }}"
+
 - name: Apply user policy
   command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
   register: apply_policy
-  when: create_policy.changed or add_user.changed
+  when: create_policy.changed or minio_alias not in user_policies
   changed_when: '"Policy `" + user.name + "` is set on user `" + user.name + "`" in apply_policy.stdout'

@@ -1,20 +1,18 @@
 ---
 
 - name: Check whether user is already configured
-  ansible.builtin.command: "{{ mc_command }} admin user info {{ minio_alias }} {{ user.name }}"
+  ansible.builtin.command: "{{ mc_command }} admin user info {{ minio_alias }} {{ user.name }} --json"
   register: get_user
   changed_when: false
-  ignore_errors: true
+  failed_when: false
 
-- name: Create users
+- name: Create user if missing
   ansible.builtin.command: "{{ mc_command }} admin user add {{ minio_alias }} {{ user.name }} {{ user.password }}"
   register: add_user
-  changed_when: '"Added user `" + user.name + "` successfully" in add_user.stdout'
-  when:
-    - get_user.rc==1
-    - '"Unable to get user info" in get_user.stderr'
+  when: (get_user.stdout | from_json)['status'] != "success"
+  changed_when: true
 
-- name: Create users policy file
+- name: Create user's policy file
   ansible.builtin.template:
     src: minio_policy.json.j2
     dest: "{{ minio_policy_dir }}/{{ user.name }}.json"
@@ -23,14 +21,24 @@
     mode: "0640"
   register: create_policy
 
-- name: Add user policy
+- name: Register user policy in MinIO if the policy file was created/changed
   ansible.builtin.command: "{{ mc_command }} admin policy create {{ minio_alias }} {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
   register: add_policy
   when: create_policy.changed
-  changed_when: '"Added policy `" + user.name + "` successfully" in add_policy.stdout'
+  changed_when: true
 
-- name: Apply user policy
-  ansible.builtin.command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
+- name: Get policies attached to user
+  ansible.builtin.command: "{{ mc_command }} admin policy entities {{ minio_alias }} --user {{ user.name }} --json"
+  register: get_policies
+  changed_when: false
+  failed_when: get_policies.rc != 0 or (get_policies.stdout | from_json)['status'] != "success"
+
+- name: Extract policies
+  ansible.builtin.set_fact:
+    user_policies: "{{ get_policies.stdout | from_json | community.general.json_query('result.userMappings[0].policies') | default([]) or [] }}"
+
+- name: Attach policy to user if missing
+  command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
   register: apply_policy
-  when: create_policy.changed
-  changed_when: '"Policy `" + user.name + "` is set on user `" + user.name + "`" in apply_policy.stdout'
+  when: user.name not in user_policies
+  changed_when: true

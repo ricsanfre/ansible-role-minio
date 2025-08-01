@@ -32,5 +32,5 @@
 - name: Apply user policy
   command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
   register: apply_policy
-  when: create_policy.changed
+  when: create_policy.changed or add_user.changed
   changed_when: '"Policy `" + user.name + "` is set on user `" + user.name + "`" in apply_policy.stdout'

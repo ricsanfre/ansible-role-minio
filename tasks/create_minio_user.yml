@@ -29,7 +29,7 @@
   command: "{{ mc_command }} admin policy entities {{minio_alias }} --user {{ user.name }} --json"
   register: get_policies
   changed_when: false
-  failed_when: get_policies.rc != 0 or (get_policies.stdout | from_json)['status'] != "success" 
+  failed_when: get_policies.rc != 0 or (get_policies.stdout | from_json)['status'] != "success"
 
 - name: Extract policies
   set_fact:

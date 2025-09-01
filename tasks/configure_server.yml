@@ -28,7 +28,7 @@
 
 - name: Configure Minio Site Replication
   include_tasks: configure_site_replication.yml
-  when: replication_sites
+  when: replication_sites | length > 0
 
 # Create Prometheus bearer token
 - name: Create Prometheus bearer token

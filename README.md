@@ -3,7 +3,6 @@ Ansible Role: Minio Server Installation and Configuration
 
 This role install and configure [Minio](http://min.io) in a linux server.
 
-
 Requirements
 ------------
 
@@ -14,12 +13,13 @@ Role Variables
 
 Available variables are listed below along with default values (see `defaults\main.yaml`)
 
-- Wheter to install or not minio server and minio client
+- Whether to install or not minio server and minio client
 
   ```yml
   minio_install_server: true
   minio_install_client: true
   ```
+
 - Minio server installation details
 
   Minio release version to install
@@ -30,17 +30,22 @@ Available variables are listed below along with default values (see `defaults\ma
   ```
 
   Minio UNIX user/group
+
   ```yml
   minio_group: minio
   minio_user: minio
   ```
+
   Minio installation directories to place server configuration (`minio_etc_dir`), TLS certificates (`minio_cert_dir`) and user access policies (`minio_policy_dir`)
+
   ```yml
   minio_etc_dir: /etc/minio
   minio_cert_dir: "{{ minio_etc_dir }}/ssl"
   minio_policy_dir: "{{ minio_etc_dir }}/policy"
   ```
+
   Minio server IP address (`minio_server_address`), if empty server listen in all available IP addresses, and server/console listening ports (`minio_server_port` and `minio_console_port`)
+
   ```yml
   minio_server_port: "9091"
   minio_server_addr: ""
@@ -48,12 +53,14 @@ Available variables are listed below along with default values (see `defaults\ma
   ```
 
   Minio admin user and password
+
   ```yml
   minio_root_user: ""
   minio_root_password: ""
   ```
 
   Minio site region
+
   ```yml
   minio_site_region: "eu-west-1"
   ```
@@ -70,13 +77,15 @@ Available variables are listed below along with default values (see `defaults\ma
   minio_server_cluster_nodes: []
   ```
 
-  Set a list of nodes to create a [distributed cluster (Multi-Node Multi-Drive deployment)](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html).
+  Set a list of nodes to create a [distributed cluster (Multi-Node Multi-Drive deployment)](https://docs.min.io/community/minio-object-store/operations/deployments/installation.html#minio-mnmd).
+
+  See [Calculator](https://www.min.io/product/erasure-code-calculator)
 
   In this mode, ansible will create your server datadirs (`minio_serverdata_dirs`), but use this list (`minio_server_cluster_nodes`) for the server startup.
 
   > Multi-drive configuration requires datadirs on separate disks to satisfy Minio's distributed storage requirements.
 
-  See recommendations for using, same configuration in all nodes, sequential hostnames and local-atached storage with sequential mounts in the documentation (https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html)
+  See recommendations for using, same configuration in all nodes, sequential host-names and local-attached storage with sequential mounts in the documentation (https://docs.min.io/community/minio-object-store/operations/deployments/installation.html#minio-mnmd).
 
   Example:
 
@@ -128,12 +137,12 @@ Available variables are listed below along with default values (see `defaults\ma
       policy: private
       object_lock: true
   ```
+
   > NOTE The module use remote connection to Minio Server using Python API (`minio` python package). Role ensure that PIP is installed and install `minio` package.
 
   During bucket creation three types of policy can be specified: `private`, `read-only` or `read-write` buckets.
   > Setting policy bucket to `read-only` or `read-write` enables anonymous access to the bucket (public bucket).
   > To rekeep the bucket private and not enable annymous access `private` policy needs to be specified
-
 
   Minio object locking can also be enabled or disabled: `true` or `false`.
 
@@ -143,7 +152,6 @@ Available variables are listed below along with default values (see `defaults\ma
   The role automatically create policy json files containing the user policy statements and load them into the server.
 
   Predefined `read-only`,`write-only` and `read-write` policies, containing pre-defined access statements, can be used. Custom policies can be also defined using  `custom` policy. In this case list of access statements need to be provided.
-
 
   ```yml
   minio_users:
@@ -178,6 +186,7 @@ Available variables are listed below along with default values (see `defaults\ma
                   "arn:aws:s3:::bucket3"
               ]
   ```
+
  The previous configuration will create the following policy.json file for the user
 
 ```json
@@ -245,7 +254,6 @@ Available variables are listed below along with default values (see `defaults\ma
 
   `mc admin prometheus generate myminio -json`
 
-
 - Install Minio pip library to python virtualenv
 
   Python virtual env is created to encapsulated installation of required python packages (minio).
@@ -277,6 +285,7 @@ Available variables are listed below along with default values (see `defaults\ma
   ```
 
   Location of the virtual environemnt can be configured using following ansible variable:
+
   ```yaml
   # Path to minio virtual environment, created to avoid breakage with system managed python libraries
   minio_venv_path: "/opt/minio-venv"
@@ -293,6 +302,7 @@ Available variables are listed below along with default values (see `defaults\ma
        admin_user: "myminio2"
        admin_password: "supers1cret02"
    ```
+
    The `url` is the url of the site that will be replicated to from the currently configured site in the playbook. The `admin_user` and `admin_password` variables are authentication credentials for the site to be replicated to with admin privileges.
 
    As noted in the `site-replication` documentation
@@ -300,7 +310,6 @@ Available variables are listed below along with default values (see `defaults\ma
    > - **Removing a site** is not allowed from a set of replicated sites once configured.
    > - All sites must be using the **same** external IDP(s) if any.
    > - For [SSE-S3 or SSE-KMS encryption via KMS](https://min.io/docs/minio/linux/operations/server-side-encryption.html "MinIO KMS Guide"), all sites **must**  have access to a central KMS deployment. This can be achieved via a central KES server or multiple KES servers (say one per site) connected via a central KMS (Vault) server.
-
 
 Dependencies
 ------------
@@ -383,7 +392,6 @@ Where `generate_selfsigned_cert.yml` contain the tasks for generating a Private 
     provider: "{{ ssl_certificate_provider }}"
 
 ```
-
 
 License
 -------

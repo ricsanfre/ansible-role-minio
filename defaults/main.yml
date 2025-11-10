@@ -3,6 +3,9 @@
 minio_install_server: true
 minio_install_client: true
 
+# Base url for download
+minio_download_base_url: "https://dl.minio.io"
+
 # minio unix user
 minio_group: minio
 minio_user: minio

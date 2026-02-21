@@ -7,10 +7,32 @@ name: CI
       - synchronize
       - reopened
       - ready_for_review
+    paths:
+      - 'defaults/**'
+      - 'handlers/**'
+      - 'library/**'
+      - 'meta/**'
+      - 'molecule/**'
+      - 'tasks/**'
+      - 'templates/**'
+      - 'vars/**'
+      - '*.yml'
+      - '*.yaml'
   push:
     branches:
       - master
       - main
+    paths:
+      - 'defaults/**'
+      - 'handlers/**'
+      - 'library/**'
+      - 'meta/**'
+      - 'molecule/**'
+      - 'tasks/**'
+      - 'templates/**'
+      - 'vars/**'
+      - '*.yml'
+      - '*.yaml'
   schedule:
     - cron: "30 7 * * 3"
   workflow_dispatch:

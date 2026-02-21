@@ -422,23 +422,23 @@ Where `generate_selfsigned_cert.yml` contain the tasks for generating a Private 
 ```yml
 ---
 - name: Create private certificate
-  openssl_privatekey:
+  community.crypto.openssl_privatekey:
     path: "certificates/{{ inventory_hostname }}_private.key"
     size: "{{ ssl_key_size | int }}"
-    mode: 0644
+    mode: "0644"
 
 - name: Create CSR
-  openssl_csr:
+  community.crypto.openssl_csr:
     path: "certificates/{{ inventory_hostname }}_cert.csr"
     privatekey_path: "certificates/{{ inventory_hostname }}_private.key"
     common_name: "{{ server_hostname }}"
 
 - name: Create certificates for keystore
-  openssl_certificate:
+  community.crypto.x509_certificate:
     csr_path: "certificates/{{ inventory_hostname }}_cert.csr"
     path: "certificates/{{ inventory_hostname }}_public.crt"
     privatekey_path: "certificates/{{ inventory_hostname }}_private.key"
-    provider: "{{ ssl_certificate_provider }}"
+    provider: selfsigned
 
 ```
 

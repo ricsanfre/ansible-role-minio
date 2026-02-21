@@ -1,36 +1,36 @@
 ---
 - name: Set insecure mc command
-  set_fact:
+  ansible.builtin.set_fact:
     mc_command: "{{ minio_client_bin }} --insecure"
   when: not minio_validate_certificate
 
 - name: Set secure mc command
-  set_fact:
+  ansible.builtin.set_fact:
     mc_command: "{{ minio_client_bin }}"
   when: minio_validate_certificate
 
 - name: Configure minio connection alias
-  command: "{{ mc_command }} alias set {{ minio_alias }} {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
+  ansible.builtin.command: "{{ mc_command }} alias set {{ minio_alias }} {{ minio_url }} {{ minio_root_user }} {{ minio_root_password }}"
   register: alias_command
   changed_when: false
   failed_when: '"Added `" + minio_alias + "` successfully" not in alias_command.stdout'
 
 - name: Create Minio Buckets
-  include_tasks: create_minio_buckets.yml
+  ansible.builtin.include_tasks: create_minio_buckets.yml
   when: minio_buckets | length > 0
 
 - name: Create Minio Users
-  include_tasks: create_minio_user.yml
+  ansible.builtin.include_tasks: create_minio_user.yml
   with_items:
     - "{{ minio_users }}"
   loop_control:
     loop_var: "user"
 
 - name: Configure Minio Site Replication
-  include_tasks: configure_site_replication.yml
+  ansible.builtin.include_tasks: configure_site_replication.yml
   when: replication_sites | length > 0
 
 # Create Prometheus bearer token
 - name: Create Prometheus bearer token
-  include_tasks: create_prometheus_bearer_token.yml
+  ansible.builtin.include_tasks: create_prometheus_bearer_token.yml
   when: minio_prometheus_bearer_token

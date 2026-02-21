@@ -1,18 +1,18 @@
 ---
 
 - name: Check if prometheus bearer token exist
-  stat:
+  ansible.builtin.stat:
     path: "{{ prometheus_bearer_token_output }}"
   register: prometheus_toke_file
 
 - name: Create prometheus bearer token
-  command: "{{ mc_command }} admin prometheus generate {{ minio_alias }} -json"
+  ansible.builtin.command: "{{ mc_command }} admin prometheus generate {{ minio_alias }} -json"
   changed_when: false
   register: prometheus_token
   when: not prometheus_toke_file.stat.exists
 
 - name: Copy bearer token.
-  copy:
+  ansible.builtin.copy:
     content: "{{ prometheus_token.stdout | from_json }}"
     dest: "{{ prometheus_bearer_token_output }}"
     owner: "{{ minio_user }}"

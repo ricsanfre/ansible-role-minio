@@ -1,12 +1,12 @@
 ---
 # Install Minio Server
 - name: Install server
-  include_tasks: install_server.yml
+  ansible.builtin.include_tasks: install_server.yml
   when: minio_install_server
 
 # Install Minio Client
 - name: Install client
-  include_tasks: install_client.yml
+  ansible.builtin.include_tasks: install_client.yml
   when: minio_install_client
 
 # Configure server/cluster

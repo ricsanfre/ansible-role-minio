@@ -21,7 +21,6 @@
   hosts: minio3.ricsanfre.com
   become: true
   gather_facts: true
-  vars:
   roles:
     - role: ricsanfre.minio
       minio_root_user: "miniadmin3"

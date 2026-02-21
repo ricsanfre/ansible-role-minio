@@ -1,28 +1,28 @@
 ---
 
 - name: Compose the Minio server download url
-  set_fact:
+  ansible.builtin.set_fact:
     _minio_server_download_url: "{{ minio_download_base_url }}/server/minio/release/linux-{{ go_arch }}/archive/minio.{{ minio_server_version }}"
 
 - name: Get the Minio server checksum for architecture {{ go_arch }}
-  set_fact:
+  ansible.builtin.set_fact:
     _minio_server_checksum: "{{ lookup('url', _minio_server_download_url + '.sha256sum').split(' ')[0] }}"
 
 
 - name: Create Minio group
-  group:
+  ansible.builtin.group:
     name: "{{ minio_group }}"
     state: present
 
 - name: Create Minio user
-  user:
+  ansible.builtin.user:
     name: "{{ minio_user }}"
     group: "{{ minio_group }}"
     system: "yes"
     shell: "/usr/sbin/nologin"
 
 - name: Create the Minio config directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ minio_user }}"
@@ -34,7 +34,7 @@
     - "{{ minio_policy_dir }}"
 
 - name: Create the Minio data storage directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ minio_user }}"
@@ -44,7 +44,7 @@
   with_items: "{{ minio_server_datadirs }}"
 
 - name: Download the Minio server
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ _minio_server_download_url }}"
     dest: "{{ minio_server_bin }}"
     owner: "root"
@@ -58,7 +58,7 @@
   notify: Restart minio
 
 - name: Generate the Minio server envfile
-  template:
+  ansible.builtin.template:
     src: minio.env.j2
     dest: "{{ minio_server_envfile }}"
     owner: "{{ minio_user }}"
@@ -67,7 +67,7 @@
   notify: Restart minio
 
 - name: Create the Minio server systemd config
-  template:
+  ansible.builtin.template:
     src: minio.service.j2
     dest: "/etc/systemd/system/minio.service"
     owner: "root"
@@ -78,7 +78,7 @@
     - Restart minio
 
 - name: Copy SSL private key file
-  copy:
+  ansible.builtin.copy:
     dest: "{{ minio_cert_dir }}/private.key"
     content: "{{ minio_key }}"
     owner: "{{ minio_user }}"
@@ -89,7 +89,7 @@
   notify: Restart minio
 
 - name: Copy cert file
-  copy:
+  ansible.builtin.copy:
     dest: "{{ minio_cert_dir }}/public.crt"
     content: "{{ minio_cert }}"
     owner: "{{ minio_user }}"
@@ -100,20 +100,20 @@
   notify: Restart minio
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Ensure minio is started at boot
-  service:
+  ansible.builtin.service:
     name: minio
     enabled: true
     state: started
 
 - name: Set secure minio url if not defined
-  set_fact:
+  ansible.builtin.set_fact:
     minio_url: "https://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
   when: minio_enable_tls and minio_url | length == 0
 
 - name: Set unsecure minio_url if not defined
-  set_fact:
+  ansible.builtin.set_fact:
     minio_url: "http://{{ minio_server_address | default('127.0.0.1') }}:{{ minio_server_port }}"
   when: not minio_enable_tls and minio_url | length == 0

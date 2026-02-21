@@ -7,9 +7,6 @@ name: CI
       - synchronize
       - reopened
       - ready_for_review
-    branches:
-      - master
-      - main
   push:
     branches:
       - master

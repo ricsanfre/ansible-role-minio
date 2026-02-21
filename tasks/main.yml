@@ -10,8 +10,13 @@
   when: minio_install_client
 
 # Configure server/cluster
-- name: Configure server
-  include_tasks: configure_server.yml
-  when: minio_url|length > 0 and minio_install_client
+- name: Check if Minio Client exists
+  ansible.builtin.stat:
+    path: "{{ minio_client_bin }}"
+  register: minio_client
+
+- name: Configure server (requires Minio client installed)
+  ansible.builtin.include_tasks: configure_server.yml
+  when: minio_url|length > 0 and minio_client.stat.exists
   # run once per cluster
   run_once: true

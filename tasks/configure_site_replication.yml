@@ -9,6 +9,7 @@
 - name: Get replication site state for Minio instance
   command: "{{ mc_command }} admin replicate info {{ minio_alias }} --json"
   register: replication_info
+  changed_when: false
 
 - name: Setting replication state fact
   set_fact:

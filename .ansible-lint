@@ -1,4 +1,8 @@
 ---
+exclude_paths:
+  - .venv/
+  - venv/
+
 skip_list:
   - 'no-handler'
   - 'fqcn-builtins'

@@ -19,6 +19,16 @@
   register: package_install
   until: package_install is succeeded
 
+- name: Validate bucket versioning for site replication
+  assert:
+    that:
+      - replication_sites | default([]) | length == 0 or suspended_buckets | length == 0
+    fail_msg: >-
+      Bucket versioning cannot be suspended when site replication is enabled.
+      Update these buckets to versioning=enabled: {{ suspended_buckets | map(attribute='name') | join(', ') }}
+  vars:
+    suspended_buckets: "{{ minio_buckets | default([]) | selectattr('versioning', 'defined') | selectattr('versioning', 'equalto', 'suspended') | list }}"
+
 - name: "Create Buckets"
   minio_bucket:
     s3_url: "{{ minio_url }}"

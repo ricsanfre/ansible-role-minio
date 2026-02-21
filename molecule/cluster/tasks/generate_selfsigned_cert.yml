@@ -3,7 +3,7 @@
   community.crypto.openssl_privatekey:
     path: "certificates/{{ server_hostname }}_private.key"
     size: "{{ ssl_key_size | int }}"
-    mode: 0644
+    mode: "0644"
 
 - name: Create CSR
   community.crypto.openssl_csr:

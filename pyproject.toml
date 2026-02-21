@@ -1,0 +1,16 @@
+[project]
+name = "ricsanfre-minio-dev"
+version = "0.1.0"
+description = "Development environment for Ansible role ricsanfre.minio"
+requires-python = ">=3.11"
+dependencies = [
+  "ansible>=10.0.0",
+  "molecule>=24.2.0",
+  "molecule-plugins[docker]>=23.7.0",
+  "docker>=7.1.0",
+  "ansible-lint>=24.9.2",
+  "yamllint>=1.35.1",
+]
+
+[tool.uv]
+package = false

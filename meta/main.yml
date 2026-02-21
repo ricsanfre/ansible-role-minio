@@ -11,7 +11,6 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-        - focal
         - jammy
         - noble
 
@@ -21,3 +20,6 @@ galaxy_info:
     - minio
 
 dependencies: []
+
+collections:
+  - community.crypto

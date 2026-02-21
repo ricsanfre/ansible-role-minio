@@ -14,7 +14,7 @@
     dest: "{{ minio_client_bin }}"
     owner: "root"
     group: "root"
-    mode: 0755
+    mode: "0755"
     checksum: "sha256:{{ _minio_client_checksum }}"
   register: _download_client
   until: _download_client is succeeded

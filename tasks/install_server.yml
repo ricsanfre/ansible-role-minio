@@ -27,7 +27,7 @@
     state: directory
     owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
-    mode: 0750
+    mode: "0750"
   with_items:
     - "{{ minio_etc_dir }}"
     - "{{ minio_cert_dir }}"
@@ -39,7 +39,7 @@
     state: directory
     owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
-    mode: 0750
+    mode: "0750"
   when: minio_server_make_datadirs
   with_items: "{{ minio_server_datadirs }}"
 
@@ -49,7 +49,7 @@
     dest: "{{ minio_server_bin }}"
     owner: "root"
     group: "root"
-    mode: 0755
+    mode: "0755"
     checksum: "sha256:{{ _minio_server_checksum }}"
   register: _download_server
   until: _download_server is succeeded
@@ -63,7 +63,7 @@
     dest: "{{ minio_server_envfile }}"
     owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
-    mode: 0640
+    mode: "0640"
   notify: Restart minio
 
 - name: Create the Minio server systemd config
@@ -72,7 +72,7 @@
     dest: "/etc/systemd/system/minio.service"
     owner: "root"
     group: "root"
-    mode: 0644
+    mode: "0644"
   notify:
     - Reload minio systemd
     - Restart minio
@@ -83,7 +83,7 @@
     content: "{{ minio_key }}"
     owner: "{{ minio_user }}"
     group: "{{ minio_user }}"
-    mode: 0640
+    mode: "0640"
   become: true
   when: minio_enable_tls and (minio_key | default("")) != ""
   notify: Restart minio
@@ -94,7 +94,7 @@
     content: "{{ minio_cert }}"
     owner: "{{ minio_user }}"
     group: "{{ minio_user }}"
-    mode: 0640
+    mode: "0640"
   become: true
   when: minio_enable_tls and (minio_cert | default("")) != ""
   notify: Restart minio

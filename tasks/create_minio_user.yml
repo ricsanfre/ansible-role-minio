@@ -20,7 +20,7 @@
     dest: "{{ minio_policy_dir }}/{{ user.name }}.json"
     owner: "{{ minio_user }}"
     group: "{{ minio_group }}"
-    mode: 0640
+    mode: "0640"
   register: create_policy
 
 - name: Add user policy

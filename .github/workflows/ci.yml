@@ -36,10 +36,14 @@ jobs:
           yamllint .
 
   molecule:
-    name: Molecule
+    name: Molecule (${{ matrix.scenario }} / ${{ matrix.distro.os }}-${{ matrix.distro.release }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        scenario:
+          - tls
+          - cluster
+          - site-replication
         distro:
           - os: ubuntu
             release: 22.04
@@ -60,7 +64,7 @@ jobs:
         run: pip3 install ansible molecule molecule-plugins[docker] docker yamllint ansible-lint
 
       - name: Run Molecule tests.
-        run: molecule test
+        run: molecule test -s "${{ matrix.scenario }}"
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'

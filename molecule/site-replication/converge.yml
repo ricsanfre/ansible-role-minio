@@ -45,7 +45,7 @@
           versioning: enabled
         - name: bucket7
           policy: read-write
-          versioning: suspended
+          versioning: enabled
       replication_sites:
         - name: minio1
           url: "http://minio1.ricsanfre.com:9091"

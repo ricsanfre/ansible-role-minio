@@ -1,13 +1,13 @@
 ---
 
 - name: Check whether user is already configured
-  command: "{{ mc_command }} admin user info {{ minio_alias }} {{ user.name }}"
+  ansible.builtin.command: "{{ mc_command }} admin user info {{ minio_alias }} {{ user.name }}"
   register: get_user
   changed_when: false
   ignore_errors: true
 
 - name: Create users
-  command: "{{ mc_command }} admin user add {{ minio_alias }} {{ user.name }} {{ user.password }}"
+  ansible.builtin.command: "{{ mc_command }} admin user add {{ minio_alias }} {{ user.name }} {{ user.password }}"
   register: add_user
   changed_when: '"Added user `" + user.name + "` successfully" in add_user.stdout'
   when:
@@ -15,7 +15,7 @@
     - '"Unable to get user info" in get_user.stderr'
 
 - name: Create users policy file
-  template:
+  ansible.builtin.template:
     src: minio_policy.json.j2
     dest: "{{ minio_policy_dir }}/{{ user.name }}.json"
     owner: "{{ minio_user }}"
@@ -24,13 +24,13 @@
   register: create_policy
 
 - name: Add user policy
-  command: "{{ mc_command }} admin policy create {{ minio_alias }} {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
+  ansible.builtin.command: "{{ mc_command }} admin policy create {{ minio_alias }} {{ user.name }} {{ minio_policy_dir }}/{{ user.name }}.json"
   register: add_policy
   when: create_policy.changed
   changed_when: '"Added policy `" + user.name + "` successfully" in add_policy.stdout'
 
 - name: Apply user policy
-  command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
+  ansible.builtin.command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
   register: apply_policy
   when: create_policy.changed
   changed_when: '"Policy `" + user.name + "` is set on user `" + user.name + "`" in apply_policy.stdout'

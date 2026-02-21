@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure PIP is installed.
-  package:
+  ansible.builtin.package:
     name:
       - python3-pip
       - python3-virtualenv
@@ -9,7 +9,7 @@
     state: present
 
 - name: Install pip packages
-  pip:
+  ansible.builtin.pip:
     name:
       - minio
     state: present
@@ -20,7 +20,7 @@
   until: package_install is succeeded
 
 - name: Validate bucket versioning for site replication
-  assert:
+  ansible.builtin.assert:
     that:
       - replication_sites | default([]) | length == 0 or suspended_buckets | length == 0
     fail_msg: >-

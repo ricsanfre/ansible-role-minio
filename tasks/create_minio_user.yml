@@ -35,10 +35,10 @@
 
 - name: Extract policies
   ansible.builtin.set_fact:
-    user_policies: "{{ get_policies.stdout | from_json | community.general.json_query('result.userMappings[0].policies') | default([]) or [] }}"
+    user_policies: "{{ (((get_policies.stdout | from_json).result.userMappings | default([]) | first | default({})).policies | default([])) }}"
 
 - name: Attach policy to user if missing
-  command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
+  ansible.builtin.command: "{{ mc_command }} admin policy attach {{ minio_alias }} {{ user.name }} -u {{ user.name }}"
   register: apply_policy
   when: user.name not in user_policies
   changed_when: true

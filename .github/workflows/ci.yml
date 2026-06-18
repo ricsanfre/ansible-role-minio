@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: 'ricsanfre.minio'
 
@@ -80,7 +80,7 @@ jobs:
             release: 24.04
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: 'ricsanfre.minio'
 

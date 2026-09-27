@@ -2,7 +2,12 @@
 
 - name: Compose the Minio client download base url
   ansible.builtin.set_fact:
-    _minio_client_download_url: "{{ minio_download_base_url }}/client/mc/release/linux-{{ go_arch }}/archive/mc.{{ minio_mc_version }}"
+    _minio_client_download_url: >-
+      {%- if 'github.com' in minio_download_base_url -%}
+      {{ minio_download_base_url }}/minio/mc/releases/download/{{ minio_mc_version }}/mc.linux-{{ go_arch }}.{{ minio_mc_version }}
+      {%- else -%}
+      {{ minio_download_base_url }}/client/mc/release/linux-{{ go_arch }}/archive/mc.{{ minio_mc_version }}
+      {%- endif -%}
 
 - name: Get the Minio client checksum for architecture {{ go_arch }}
   ansible.builtin.set_fact:

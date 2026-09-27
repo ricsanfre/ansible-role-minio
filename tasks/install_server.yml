@@ -2,7 +2,12 @@
 
 - name: Compose the Minio server download url
   ansible.builtin.set_fact:
-    _minio_server_download_url: "{{ minio_download_base_url }}/server/minio/release/linux-{{ go_arch }}/archive/minio.{{ minio_server_version }}"
+    _minio_server_download_url: >-
+      {%- if 'github.com' in minio_download_base_url -%}
+      {{ minio_download_base_url }}/minio/minio/releases/download/{{ minio_server_version }}/minio.linux-{{ go_arch }}.{{ minio_server_version }}
+      {%- else -%}
+      {{ minio_download_base_url }}/server/minio/release/linux-{{ go_arch }}/archive/minio.{{ minio_server_version }}
+      {%- endif -%}
 
 - name: Get the Minio server checksum for architecture {{ go_arch }}
   ansible.builtin.set_fact:
